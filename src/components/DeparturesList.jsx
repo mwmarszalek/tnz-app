@@ -1,4 +1,4 @@
-import { formatDepartureLabel, getScheduleKey } from "../utils/helpers";
+import { formatDepartureLabel, getScheduleKey, copyToClipboardFallback } from "../utils/helpers";
 
 function DeparturesList({
   scheduleType,
@@ -58,6 +58,14 @@ function DeparturesList({
       }, 2000);
     } catch (err) {
       console.error("Błąd kopiowania:", err);
+      // 🔧 Użyj fallbacku jeśli główna metoda zawiedzie
+      copyToClipboardFallback(text);
+      button.textContent = "✓ Skopiowano";
+      button.classList.add("copied");
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove("copied");
+      }, 2000);
     }
   };
 

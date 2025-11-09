@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useAutoClear } from "./hooks/useAutoClear";
 import {
   scheduleSchool,
   scheduleVacation,
@@ -23,6 +24,13 @@ function App() {
     "driverPhone",
     DEFAULT_PHONE
   );
+
+  // 🔄 Automatyczne czyszczenie danych o 19:25
+  useAutoClear(() => {
+    setSavedSchedules({});
+    setSelectedStops({});
+    setView("departures");
+  });
 
   const getCurrentSchedule = () => {
     return scheduleType === "school" ? scheduleSchool : scheduleVacation;
