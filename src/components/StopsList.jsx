@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { busStops } from "../data/schedules";
 import { copyToClipboardFallback } from "../utils/helpers";
 
@@ -12,6 +12,31 @@ function StopsList({
   driverPhone,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Zamknięcie menu po kliknięciu poza nim
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   const schedule = getCurrentSchedule();
   const stopTimes = schedule[currentDeparture] || {};
@@ -81,14 +106,20 @@ function StopsList({
         <button className="back-btn" onClick={() => setView("departures")}>
           ← Powrót
         </button>
-        <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+
+        <button
+          className="menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+          ref={buttonRef}
+        >
           ⋮
         </button>
+
         <h1>📍 Kurs {currentDeparture}</h1>
         <p>Zaznacz przystanki ({count} wybrano)</p>
 
         {menuOpen && (
-          <div className="dropdown-menu">
+          <div className="dropdown-menu" ref={menuRef}>
             <button
               className="menu-item copy-menu-item"
               onClick={copyToClipboard}
