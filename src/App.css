@@ -422,6 +422,83 @@ body {
   color: #666;
 }
 
+.menu-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 100;
+  min-width: 200px;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  background: white;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.menu-item:hover {
+  background: #f0f4ff;
+}
+
+.menu-item:not(:last-child) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.copy-menu-item {
+  color: #0369a1;
+}
+
+.clear-menu-item {
+  color: #dc2626;
+}
+
+.copy-menu-item:hover {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1;
+}
+
+.clear-menu-item:hover {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+}
+
 .hidden {
   display: none;
 }

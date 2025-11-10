@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { busStops } from "../data/schedules";
 import { copyToClipboardFallback } from "../utils/helpers";
 
@@ -10,6 +11,8 @@ function StopsList({
   setView,
   driverPhone,
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const schedule = getCurrentSchedule();
   const stopTimes = schedule[currentDeparture] || {};
   const availableStops = busStops.filter(
@@ -29,6 +32,7 @@ function StopsList({
       confirm("Czy na pewno chcesz wyczyścić wszystkie zaznaczone przystanki?")
     ) {
       setSelectedStops({});
+      setMenuOpen(false);
     }
   };
 
@@ -63,17 +67,11 @@ function StopsList({
 
     try {
       await navigator.clipboard.writeText(text);
-      const btn = document.querySelector("#copy-btn-stops");
-      const originalText = btn.textContent;
-      btn.textContent = "✓ Skopiowano!";
-      btn.classList.add("copied");
-
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.classList.remove("copied");
-      }, 2000);
+      alert("✓ Skopiowano do schowka!");
+      setMenuOpen(false);
     } catch {
       copyToClipboardFallback(text);
+      setMenuOpen(false);
     }
   };
 
@@ -83,8 +81,28 @@ function StopsList({
         <button className="back-btn" onClick={() => setView("departures")}>
           ← Powrót
         </button>
+        <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+          ⋮
+        </button>
         <h1>📍 Kurs {currentDeparture}</h1>
         <p>Zaznacz przystanki ({count} wybrano)</p>
+
+        {menuOpen && (
+          <div className="dropdown-menu">
+            <button
+              className="menu-item copy-menu-item"
+              onClick={copyToClipboard}
+            >
+              📋 Skopiuj listę
+            </button>
+            <button
+              className="menu-item clear-menu-item"
+              onClick={clearCurrentStops}
+            >
+              🗑️ Wyczyść przystanki
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="content">
@@ -113,16 +131,6 @@ function StopsList({
         </button>
         <button className="btn btn-sms" onClick={sendSMS}>
           📱 Wyślij SMS
-        </button>
-        <button
-          className="btn btn-copy"
-          id="copy-btn-stops"
-          onClick={copyToClipboard}
-        >
-          📋 Skopiuj listę
-        </button>
-        <button className="btn btn-clear" onClick={clearCurrentStops}>
-          🗑️ Wyczyść przystanki
         </button>
       </div>
     </>
