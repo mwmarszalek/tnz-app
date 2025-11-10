@@ -1,41 +1,37 @@
 # Konfiguracja Netlify dla Vite + React
 
 [build]
-  # Komenda budowania
   command = "npm run build"
-  
-  # Folder z buildem
   publish = "dist"
 
-# Przekierowania dla SPA (Single Page Application)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Nagłówki dla PWA i bezpieczeństwa
 [[headers]]
   for = "/*"
   [headers.values]
-    # PWA
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Cache dla zasobów statycznych
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache dla Service Worker (bez cache, zawsze świeży)
 [[headers]]
   for = "/sw.js"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
 
-# Cache dla manifestu
 [[headers]]
   for = "/manifest.json"
   [headers.values]
