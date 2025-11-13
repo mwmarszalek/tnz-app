@@ -13,7 +13,7 @@ import "./App.css";
 
 function App() {
   const [view, setView] = useState("departures"); // 'departures', 'stops', 'settings'
-  const [scheduleType, setScheduleType] = useState("vacation");
+  const [scheduleType, setScheduleType] = useState("school");
   const [currentDeparture, setCurrentDeparture] = useState(null);
   const [selectedStops, setSelectedStops] = useState({});
   const [savedSchedules, setSavedSchedules] = useLocalStorage(
