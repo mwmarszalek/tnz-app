@@ -117,7 +117,6 @@ body {
   max-height: calc(100vh - 250px);
   overflow-y: auto;
 }
-
 .departure-item.break-time {
   border-color: #fbbf24;
   background: #fffbeb;
@@ -302,10 +301,14 @@ body {
 }
 
 .action-buttons {
-  padding: 20px;
+  position: sticky;
+  bottom: 0;
+  padding: 10px 20px 15px 20px;
   display: flex;
-  flex-direction: column;
   gap: 10px;
+  z-index: 10;
+  margin: 0 auto;
+  max-width: 400px;
 }
 
 .btn {
