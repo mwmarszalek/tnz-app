@@ -554,7 +554,7 @@ export const scheduleSchool = {
   },
 
   "15:15 (kurs przez ul. Zamieć)": {
-    "SKM Podjuchy": "14:15",
+    "SKM Podjuchy": "15:15",
 
     Metalowa: "15:17",
 
