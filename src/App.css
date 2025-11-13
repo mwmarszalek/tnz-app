@@ -306,12 +306,18 @@ body {
 .action-buttons {
   position: sticky;
   bottom: 0;
-  padding: 10px 20px 15px 20px;
+  padding: 10px 20px calc(15px + env(safe-area-inset-bottom)) 20px;
   display: flex;
   gap: 10px;
   z-index: 10;
   margin: 0 auto;
   width: 100%;
+}
+
+@supports (padding: max(0px)) {
+  .action-buttons {
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
+  }
 }
 
 .btn {
