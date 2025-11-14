@@ -4,6 +4,9 @@ import {
   copyToClipboardFallback,
 } from "../utils/helpers";
 
+import { useState } from "react";
+import DailyReportModal from "./DailyReportModal";
+
 function DeparturesList({
   scheduleType,
   setScheduleType,
@@ -15,6 +18,7 @@ function DeparturesList({
   sentSMS,
   setSentSMS,
 }) {
+  const [showModal, setShowModal] = useState(false);
   const departures = Object.keys(getCurrentSchedule());
 
   const getSelectedCount = (time) => {
@@ -175,6 +179,26 @@ function DeparturesList({
           );
         })}
       </div>
+      <div style={{ padding: "20px" }}>
+        <button
+          className="btn btn-save"
+          onClick={() => setShowModal(true)}
+          style={{ width: "100%" }}
+        >
+          📊 Wyślij raport dzienny
+        </button>
+      </div>
+
+      {showModal && (
+        <DailyReportModal
+          onClose={() => setShowModal(false)}
+          savedSchedules={savedSchedules}
+          scheduleType={scheduleType}
+          getCurrentSchedule={getCurrentSchedule}
+          setSavedSchedules={setSavedSchedules}
+          setSentSMS={setSentSMS}
+        />
+      )}
     </>
   );
 }
