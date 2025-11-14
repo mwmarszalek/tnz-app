@@ -67,17 +67,17 @@ function StopsList({
   const sendSMS = () => {
     const selected = busStops.filter((stop) => selectedStops[stop]);
 
+    let text;
     if (selected.length === 0) {
-      alert("Nie zaznaczono żadnych przystanków!");
-      return;
+      text = `Kurs o godzinie ${currentDeparture} - brak zamówionych przystanków.`;
+    } else {
+      text = `Lista przystanków na kurs o godzinie ${currentDeparture}:\n\n${selected
+        .map((stop, i) => `${i + 1}. ${stop} - ${stopTimes[stop] || "--:--"}`)
+        .join("\n")}`;
     }
 
-    const text = `Lista przystanków na kurs o godzinie ${currentDeparture}:\n\n${selected
-      .map((stop, i) => `${i + 1}. ${stop} - ${stopTimes[stop] || "--:--"}`)
-      .join("\n")}`;
-
-    const scheduleKey = `${scheduleType}_${currentDeparture}`; // ← dodaj
-    setSentSMS({ ...sentSMS, [scheduleKey]: true }); // ← dodaj
+    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    setSentSMS({ ...sentSMS, [scheduleKey]: true });
 
     const encodedText = encodeURIComponent(text);
     const smsURL = `sms:${driverPhone}?body=${encodedText}`;
