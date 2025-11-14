@@ -10,6 +10,9 @@ function StopsList({
   saveStops,
   setView,
   driverPhone,
+  scheduleType,
+  sentSMS,
+  setSentSMS,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -72,6 +75,9 @@ function StopsList({
     const text = `Lista przystanków na kurs o godzinie ${currentDeparture}:\n\n${selected
       .map((stop, i) => `${i + 1}. ${stop} - ${stopTimes[stop] || "--:--"}`)
       .join("\n")}`;
+
+    const scheduleKey = `${scheduleType}_${currentDeparture}`; // ← dodaj
+    setSentSMS({ ...sentSMS, [scheduleKey]: true }); // ← dodaj
 
     const encodedText = encodeURIComponent(text);
     const smsURL = `sms:${driverPhone}?body=${encodedText}`;

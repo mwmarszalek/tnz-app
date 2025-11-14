@@ -49,6 +49,8 @@ function App() {
     setView("departures");
   };
 
+  const [sentSMS, setSentSMS] = useLocalStorage("sentSMS", {});
+
   return (
     <div className="container">
       {view === "departures" && (
@@ -60,6 +62,7 @@ function App() {
           setSavedSchedules={setSavedSchedules}
           selectDeparture={selectDeparture}
           setView={setView}
+          sentSMS={sentSMS}
         />
       )}
 
@@ -72,6 +75,9 @@ function App() {
           saveStops={saveStops}
           setView={setView}
           driverPhone={driverPhone}
+          scheduleType={scheduleType}
+          sentSMS={sentSMS}
+          setSentSMS={setSentSMS}
         />
       )}
 

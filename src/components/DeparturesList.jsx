@@ -1,4 +1,8 @@
-import { formatDepartureLabel, getScheduleKey, copyToClipboardFallback } from "../utils/helpers";
+import {
+  formatDepartureLabel,
+  getScheduleKey,
+  copyToClipboardFallback,
+} from "../utils/helpers";
 
 function DeparturesList({
   scheduleType,
@@ -8,6 +12,7 @@ function DeparturesList({
   setSavedSchedules,
   selectDeparture,
   setView,
+  sentSMS,
 }) {
   const departures = Object.keys(getCurrentSchedule());
 
@@ -58,7 +63,6 @@ function DeparturesList({
       }, 2000);
     } catch (err) {
       console.error("Błąd kopiowania:", err);
-      // 🔧 Użyj fallbacku jeśli główna metoda zawiedzie
       copyToClipboardFallback(text);
       button.textContent = "✓ Skopiowano";
       button.classList.add("copied");
@@ -77,7 +81,7 @@ function DeparturesList({
         </button>
         <h1>🚌 Odjazdy Autobusu</h1>
         <p>Wybierz godzinę odjazdu</p>
-        <div style={{ marginTop: "15px" }}>
+        <div style={{ marginTop: "15px", display: "flex", gap: "10px" }}>
           <button
             className={`schedule-toggle ${
               scheduleType === "school" ? "active" : ""
@@ -102,6 +106,8 @@ function DeparturesList({
           const count = getSelectedCount(time);
           const hasSavedStops = count > 0;
           const formatted = formatDepartureLabel(time);
+          const scheduleKey = getScheduleKey(scheduleType, time);
+          const smsSent = sentSMS[scheduleKey];
 
           return (
             <div key={time} className="departure-item">
@@ -123,11 +129,23 @@ function DeparturesList({
                     )}
                   </span>
                 </div>
-                {hasSavedStops && (
-                  <span className="badge">
-                    ✓ {count} {count === 1 ? "przystanek" : "przystanki"}
-                  </span>
-                )}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  {hasSavedStops && (
+                    <span className="badge">
+                      ✓ {count} {count === 1 ? "przystanek" : "przystanki"}
+                    </span>
+                  )}
+                  {smsSent && (
+                    <span className="badge badge-sms">📱 SMS wysłany</span>
+                  )}
+                </div>
               </div>
 
               {hasSavedStops && (
