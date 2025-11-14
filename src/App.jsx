@@ -51,6 +51,8 @@ function App() {
 
   const [sentSMS, setSentSMS] = useLocalStorage("sentSMS", {});
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+
   return (
     <div className="container">
       {view === "departures" && (
@@ -64,6 +66,8 @@ function App() {
           setView={setView}
           sentSMS={sentSMS}
           setSentSMS={setSentSMS}
+          scrollPosition={scrollPosition}
+          setScrollPosition={setScrollPosition}
         />
       )}
 

@@ -4,7 +4,8 @@ import {
   copyToClipboardFallback,
 } from "../utils/helpers";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import DailyReportModal from "./DailyReportModal";
 
 function DeparturesList({
@@ -17,8 +18,18 @@ function DeparturesList({
   setView,
   sentSMS,
   setSentSMS,
+  scrollPosition,
+  setScrollPosition,
 }) {
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const content = document.querySelector(".content");
+    if (content && scrollPosition) {
+      content.scrollTop = scrollPosition;
+    }
+  }, [scrollPosition]);
+
   const departures = Object.keys(getCurrentSchedule());
 
   const getSelectedCount = (time) => {
@@ -122,7 +133,11 @@ function DeparturesList({
             <div key={time} className="departure-item">
               <div
                 className="departure-main"
-                onClick={() => selectDeparture(time)}
+                onClick={() => {
+                  const content = document.querySelector(".content");
+                  setScrollPosition(content?.scrollTop || 0);
+                  selectDeparture(time);
+                }}
               >
                 <div className="departure-time">
                   <div className="time-icon">🕐</div>
