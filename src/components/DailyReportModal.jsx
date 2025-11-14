@@ -5,6 +5,8 @@ function DailyReportModal({
   savedSchedules,
   scheduleType,
   getCurrentSchedule,
+  setSavedSchedules,
+  setSentSMS,
 }) {
   const [passengerCount, setPassengerCount] = useState("");
   const [dispatchers, setDispatchers] = useState("");
@@ -57,6 +59,12 @@ function DailyReportModal({
       );
 
       alert("✅ Dane wysłane do Google Sheets!");
+
+      setSavedSchedules({});
+      setSentSMS({});
+      localStorage.removeItem("busSchedules");
+      localStorage.removeItem("sentSMS");
+
       onClose();
     } catch (error) {
       alert("❌ Błąd wysyłania: " + error.message);

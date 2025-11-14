@@ -195,6 +195,8 @@ function DeparturesList({
           savedSchedules={savedSchedules}
           scheduleType={scheduleType}
           getCurrentSchedule={getCurrentSchedule}
+          setSavedSchedules={setSavedSchedules}
+          setSentSMS={setSentSMS}
         />
       )}
     </>
