@@ -117,8 +117,8 @@ body {
 
 .content {
   padding: 20px;
-  max-height: calc(100vh - 250px);
   overflow-y: auto;
+  flex: 1;
 }
 .departure-item.break-time {
   border-color: #fbbf24;
