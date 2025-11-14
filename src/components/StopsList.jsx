@@ -41,6 +41,15 @@ function StopsList({
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    const existingSaves = JSON.parse(
+      localStorage.getItem("busSchedules") || "{}"
+    );
+    existingSaves[scheduleKey] = selectedStops;
+    localStorage.setItem("busSchedules", JSON.stringify(existingSaves));
+  }, [selectedStops, scheduleType, currentDeparture]);
+
   const schedule = getCurrentSchedule();
   const stopTimes = schedule[currentDeparture] || {};
   const availableStops = busStops.filter(
@@ -109,7 +118,13 @@ function StopsList({
   return (
     <>
       <div className="header">
-        <button className="back-btn" onClick={() => setView("departures")}>
+        <button
+          className="back-btn"
+          onClick={() => {
+            saveStops();
+            setView("departures");
+          }}
+        >
           ← Powrót
         </button>
 
