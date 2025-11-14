@@ -63,6 +63,7 @@ function App() {
           selectDeparture={selectDeparture}
           setView={setView}
           sentSMS={sentSMS}
+          setSentSMS={setSentSMS}
         />
       )}
 

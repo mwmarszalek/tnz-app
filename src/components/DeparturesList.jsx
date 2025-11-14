@@ -13,6 +13,7 @@ function DeparturesList({
   selectDeparture,
   setView,
   sentSMS,
+  setSentSMS,
 }) {
   const departures = Object.keys(getCurrentSchedule());
 
@@ -31,6 +32,10 @@ function DeparturesList({
       const updated = { ...savedSchedules };
       delete updated[scheduleKey];
       setSavedSchedules(updated);
+
+      const updatedSMS = { ...sentSMS };
+      delete updatedSMS[scheduleKey];
+      setSentSMS(updatedSMS);
     }
   };
 
@@ -148,14 +153,16 @@ function DeparturesList({
                 </div>
               </div>
 
-              {hasSavedStops && (
+              {(hasSavedStops || smsSent) && (
                 <div className="departure-buttons">
-                  <button
-                    className="departure-btn-small copy-small"
-                    onClick={(e) => copyDepartureList(e, time)}
-                  >
-                    📋 Skopiuj
-                  </button>
+                  {hasSavedStops && (
+                    <button
+                      className="departure-btn-small copy-small"
+                      onClick={(e) => copyDepartureList(e, time)}
+                    >
+                      📋 Skopiuj
+                    </button>
+                  )}
                   <button
                     className="departure-btn-small clear-small"
                     onClick={(e) => clearDeparture(e, time)}
