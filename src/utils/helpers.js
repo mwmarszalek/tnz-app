@@ -8,9 +8,17 @@ export function formatDepartureLabel(label) {
   return { time, subtitle };
 }
 
-export function getScheduleKey(scheduleType, time) {
-  return `${scheduleType}_${time}`;
-}
+export const getScheduleKey = (
+  scheduleType,
+  time,
+  busNumber = "904",
+  direction = "1"
+) => {
+  if (busNumber === "908") {
+    return `${busNumber}_${direction}_${scheduleType}_${time}`;
+  }
+  return `${busNumber}_${scheduleType}_${time}`;
+};
 
 export function copyToClipboardFallback(text) {
   const textarea = document.createElement("textarea");

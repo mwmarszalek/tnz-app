@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { busStops } from "../data/schedules";
-import { copyToClipboardFallback } from "../utils/helpers";
+import { copyToClipboardFallback, getScheduleKey } from "../utils/helpers";
 
 function StopsList({
   currentDeparture,
@@ -13,6 +12,9 @@ function StopsList({
   scheduleType,
   sentSMS,
   setSentSMS,
+  currentBusStops,
+  busNumber,
+  direction,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -42,17 +44,22 @@ function StopsList({
   }, [menuOpen]);
 
   useEffect(() => {
-    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      currentDeparture,
+      busNumber,
+      direction
+    );
     const existingSaves = JSON.parse(
       localStorage.getItem("busSchedules") || "{}"
     );
     existingSaves[scheduleKey] = selectedStops;
     localStorage.setItem("busSchedules", JSON.stringify(existingSaves));
-  }, [selectedStops, scheduleType, currentDeparture]);
+  }, [selectedStops, scheduleType, currentDeparture, busNumber, direction]);
 
   const schedule = getCurrentSchedule();
   const stopTimes = schedule[currentDeparture] || {};
-  const availableStops = busStops.filter(
+  const availableStops = currentBusStops.filter(
     (stop) => stopTimes[stop] !== undefined
   );
   const count = Object.values(selectedStops).filter(Boolean).length;
@@ -74,7 +81,7 @@ function StopsList({
   };
 
   const sendSMS = () => {
-    const selected = busStops.filter((stop) => selectedStops[stop]);
+    const selected = currentBusStops.filter((stop) => selectedStops[stop]);
 
     let text;
     if (selected.length === 0) {
@@ -85,7 +92,12 @@ function StopsList({
         .join("\n")}`;
     }
 
-    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      currentDeparture,
+      busNumber,
+      direction
+    );
     setSentSMS({ ...sentSMS, [scheduleKey]: true });
 
     const encodedText = encodeURIComponent(text);
@@ -94,7 +106,7 @@ function StopsList({
   };
 
   const copyToClipboard = async () => {
-    const selected = busStops.filter((stop) => selectedStops[stop]);
+    const selected = currentBusStops.filter((stop) => selectedStops[stop]);
 
     if (selected.length === 0) {
       alert("Nie zaznaczono żadnych przystanków!");
