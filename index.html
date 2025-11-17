@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
 
+    <script
+      src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+      defer
+    ></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function (OneSignal) {
+        await OneSignal.init({
+          appId: "d51065fe-d4e2-422a-bff4-eca8b67e1f5c",
+        });
+      });
+    </script>
+
     <!-- PWA Meta Tags -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="manifest" href="/manifest.json" />
