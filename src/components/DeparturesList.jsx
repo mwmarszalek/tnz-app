@@ -144,13 +144,13 @@ function DeparturesList({
               className={`schedule-toggle ${direction === "1" ? "active" : ""}`}
               onClick={() => setDirection("1")}
             >
-              ➡️ Chobolańska → Maczka
+              ➡️ Maczka
             </button>
             <button
               className={`schedule-toggle ${direction === "2" ? "active" : ""}`}
               onClick={() => setDirection("2")}
             >
-              ⬅️ Maczka → Chobolańska
+              ➡️ Chobolańska
             </button>
           </div>
         )}

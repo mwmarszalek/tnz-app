@@ -14,16 +14,13 @@ export function useAutoClear(onClear) {
       if (hours === 19 && minutes === 25) {
         console.log("🔄 Automatyczne czyszczenie danych o 19:25");
         onClear();
-        
-        // Opcjonalnie: pokaż alert użytkownikowi
+
         alert("🔄 Dane zostały automatycznie wyczyszczone o 19:25");
       }
     };
 
-    // Sprawdzaj co minutę
     const interval = setInterval(checkTime, 60 * 1000);
 
-    // Sprawdź od razu przy montowaniu
     checkTime();
 
     // Cleanup
