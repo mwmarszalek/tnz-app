@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { database, ref, set, onValue } from "./firebase";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useAutoClear } from "./hooks/useAutoClear";
@@ -13,22 +13,44 @@ import Settings from "./components/Settings";
 import "./App.css";
 
 function App() {
-  const [view, setView] = useState("departures"); // 'departures', 'stops', 'settings'
+  const [view, setView] = useState("departures");
   const [scheduleType, setScheduleType] = useState("school");
   const [currentDeparture, setCurrentDeparture] = useState(null);
   const [selectedStops, setSelectedStops] = useState({});
-  const [savedSchedules, setSavedSchedules] = useLocalStorage(
-    "busSchedules",
-    {}
-  );
+  const [savedSchedules, setSavedSchedules] = useState({});
+  const [sentSMS, setSentSMS] = useState({});
+  const [scrollPosition, setScrollPosition] = useState(0);
   const [driverPhone, setDriverPhone] = useLocalStorage(
     "driverPhone",
     DEFAULT_PHONE
   );
 
+  // Nasłuchuj zmian savedSchedules w Firebase
+  useEffect(() => {
+    const schedulesRef = ref(database, "savedSchedules");
+    const unsubscribe = onValue(schedulesRef, (snapshot) => {
+      const data = snapshot.val();
+      setSavedSchedules(data || {});
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Nasłuchuj zmian sentSMS w Firebase
+  useEffect(() => {
+    const smsRef = ref(database, "sentSMS");
+    const unsubscribe = onValue(smsRef, (snapshot) => {
+      const data = snapshot.val();
+      setSentSMS(data || {});
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   // 🔄 Automatyczne czyszczenie danych o 19:25
   useAutoClear(() => {
-    setSavedSchedules({});
+    set(ref(database, "savedSchedules"), {});
+    set(ref(database, "sentSMS"), {});
     setSelectedStops({});
     setView("departures");
   });
@@ -46,13 +68,21 @@ function App() {
 
   const saveStops = () => {
     const scheduleKey = `${scheduleType}_${currentDeparture}`;
-    setSavedSchedules({ ...savedSchedules, [scheduleKey]: selectedStops });
+    const newSchedules = { ...savedSchedules, [scheduleKey]: selectedStops };
+    setSavedSchedules(newSchedules);
+    set(ref(database, "savedSchedules"), newSchedules);
     setView("departures");
   };
 
-  const [sentSMS, setSentSMS] = useLocalStorage("sentSMS", {});
+  const updateSentSMS = (newSMS) => {
+    setSentSMS(newSMS);
+    set(ref(database, "sentSMS"), newSMS);
+  };
 
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const updateSavedSchedules = (newSchedules) => {
+    setSavedSchedules(newSchedules);
+    set(ref(database, "savedSchedules"), newSchedules);
+  };
 
   return (
     <div className="container">
@@ -62,11 +92,11 @@ function App() {
           setScheduleType={setScheduleType}
           getCurrentSchedule={getCurrentSchedule}
           savedSchedules={savedSchedules}
-          setSavedSchedules={setSavedSchedules}
+          setSavedSchedules={updateSavedSchedules}
           selectDeparture={selectDeparture}
           setView={setView}
           sentSMS={sentSMS}
-          setSentSMS={setSentSMS}
+          setSentSMS={updateSentSMS}
           scrollPosition={scrollPosition}
           setScrollPosition={setScrollPosition}
         />
@@ -83,7 +113,7 @@ function App() {
           driverPhone={driverPhone}
           scheduleType={scheduleType}
           sentSMS={sentSMS}
-          setSentSMS={setSentSMS}
+          setSentSMS={updateSentSMS}
         />
       )}
 
