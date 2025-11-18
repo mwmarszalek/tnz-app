@@ -8,9 +8,11 @@ export function formatDepartureLabel(label) {
   return { time, subtitle };
 }
 
-export function getScheduleKey(scheduleType, time) {
-  return `${scheduleType}_${time}`;
-}
+export const getScheduleKey = (scheduleType, time) => {
+  // Usuń znaki specjalne z czasu
+  const cleanTime = time.replace(/[.#$[\]/():\s]/g, "_");
+  return `${scheduleType}_${cleanTime}`;
+};
 
 export function copyToClipboardFallback(text) {
   const textarea = document.createElement("textarea");

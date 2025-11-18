@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { database, ref, set, onValue } from "./firebase";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useAutoClear } from "./hooks/useAutoClear";
+import { getScheduleKey } from "./utils/helpers";
 import {
   scheduleSchool,
   scheduleVacation,
@@ -67,7 +68,7 @@ function App() {
   };
 
   const saveStops = () => {
-    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    const scheduleKey = getScheduleKey(scheduleType, currentDeparture);
     const newSchedules = { ...savedSchedules, [scheduleKey]: selectedStops };
     setSavedSchedules(newSchedules);
     set(ref(database, "savedSchedules"), newSchedules);
@@ -79,10 +80,10 @@ function App() {
     set(ref(database, "sentSMS"), newSMS);
   };
 
-  const updateSavedSchedules = (newSchedules) => {
+  const updateSavedSchedules = useCallback((newSchedules) => {
     setSavedSchedules(newSchedules);
     set(ref(database, "savedSchedules"), newSchedules);
-  };
+  }, []);
 
   return (
     <div className="container">
@@ -114,6 +115,7 @@ function App() {
           scheduleType={scheduleType}
           sentSMS={sentSMS}
           setSentSMS={updateSentSMS}
+          savedSchedules={savedSchedules}
         />
       )}
 
