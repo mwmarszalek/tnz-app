@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+
 import { busStops } from "../data/schedules";
-import { copyToClipboardFallback } from "../utils/helpers";
+import { copyToClipboardFallback, getScheduleKey } from "../utils/helpers";
 
 function StopsList({
   currentDeparture,
@@ -13,8 +14,15 @@ function StopsList({
   scheduleType,
   sentSMS,
   setSentSMS,
+  savedSchedules,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Załaduj zapisane przystanki przy wejściu
+  useEffect(() => {
+    const scheduleKey = getScheduleKey(scheduleType, currentDeparture);
+    setSelectedStops(savedSchedules[scheduleKey] || {});
+  }, [currentDeparture, scheduleType, savedSchedules, setSelectedStops]);
 
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -40,15 +48,6 @@ function StopsList({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
-
-  useEffect(() => {
-    const scheduleKey = `${scheduleType}_${currentDeparture}`;
-    const existingSaves = JSON.parse(
-      localStorage.getItem("busSchedules") || "{}"
-    );
-    existingSaves[scheduleKey] = selectedStops;
-    localStorage.setItem("busSchedules", JSON.stringify(existingSaves));
-  }, [selectedStops, scheduleType, currentDeparture]);
 
   const schedule = getCurrentSchedule();
   const stopTimes = schedule[currentDeparture] || {};
@@ -85,7 +84,7 @@ function StopsList({
         .join("\n")}`;
     }
 
-    const scheduleKey = `${scheduleType}_${currentDeparture}`;
+    const scheduleKey = getScheduleKey(scheduleType, currentDeparture);
     setSentSMS({ ...sentSMS, [scheduleKey]: true });
 
     const encodedText = encodeURIComponent(text);
