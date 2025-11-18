@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { database, ref, set, onValue } from "./firebase";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useAutoClear } from "./hooks/useAutoClear";
 import {
