@@ -54,6 +54,16 @@ function DeparturesList({
     }
   };
 
+  const clearAllData = () => {
+    if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane?")) {
+      setSavedSchedules({});
+      setSentSMS({});
+    }
+  };
+
+  const hasAnyData =
+    Object.keys(savedSchedules).length > 0 || Object.keys(sentSMS).length > 0;
+
   const copyDepartureList = async (e, time) => {
     e.stopPropagation();
 
@@ -202,6 +212,15 @@ function DeparturesList({
         >
           📊 Wyślij raport dzienny
         </button>
+        {hasAnyData && (
+          <button
+            className="btn btn-clear"
+            onClick={clearAllData}
+            style={{ width: "100%", padding: "10px" }}
+          >
+            🗑️ Wyczyść wszystkie dane
+          </button>
+        )}
       </div>
 
       {showModal && (
