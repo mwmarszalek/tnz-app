@@ -23,12 +23,6 @@ function Settings({ driverPhone, setDriverPhone, setView }) {
     setView("departures");
   };
 
-  const requestNotifications = () => {
-    if (window.OneSignal) {
-      window.OneSignal.Slidedown.promptPush();
-    }
-  };
-
   return (
     <>
       <div className="header">
@@ -62,9 +56,6 @@ function Settings({ driverPhone, setDriverPhone, setView }) {
         <div className="action-buttons">
           <button className="btn btn-save" onClick={savePhoneNumber}>
             💾 Zapisz numer
-          </button>
-          <button className="btn btn-save" onClick={requestNotifications}>
-            🔔 Włącz powiadomienia
           </button>
         </div>
       </div>
