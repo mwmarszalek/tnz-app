@@ -4,8 +4,13 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useAutoClear } from "./hooks/useAutoClear";
 import { getScheduleKey } from "./utils/helpers";
 import {
-  scheduleSchool,
-  scheduleVacation,
+  scheduleSchool904,
+  scheduleVacation904,
+  scheduleSchool908Dir1,
+  scheduleSchool908Dir2,
+  scheduleVacation908Dir1,
+  scheduleVacation908Dir2,
+  busStops,
   DEFAULT_PHONE,
 } from "./data/schedules";
 import DeparturesList from "./components/DeparturesList";
@@ -16,6 +21,8 @@ import "./App.css";
 function App() {
   const [view, setView] = useState("departures");
   const [scheduleType, setScheduleType] = useState("school");
+  const [busNumber, setBusNumber] = useState("904");
+  const [direction, setDirection] = useState("1");
   const [currentDeparture, setCurrentDeparture] = useState(null);
   const [selectedStops, setSelectedStops] = useState({});
   const [savedSchedules, setSavedSchedules] = useState({});
@@ -48,6 +55,11 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // Zmiana klasy body przy zmianie autobusu (animacja kolorów)
+  useEffect(() => {
+    document.body.className = `bus-${busNumber}`;
+  }, [busNumber]);
+
   // 🔄 Automatyczne czyszczenie danych o 19:25
   useAutoClear(() => {
     set(ref(database, "savedSchedules"), {});
@@ -56,19 +68,52 @@ function App() {
     setView("departures");
   });
 
+  const getCurrentBusStops = () => {
+    if (busNumber === "904") {
+      return busStops[904];
+    } else if (busNumber === "908") {
+      return busStops[908][`direction${direction}`];
+    }
+    return [];
+  };
+
   const getCurrentSchedule = () => {
-    return scheduleType === "school" ? scheduleSchool : scheduleVacation;
+    if (busNumber === "904") {
+      return scheduleType === "school"
+        ? scheduleSchool904
+        : scheduleVacation904;
+    } else if (busNumber === "908") {
+      if (scheduleType === "school") {
+        return direction === "1"
+          ? scheduleSchool908Dir1
+          : scheduleSchool908Dir2;
+      } else {
+        return direction === "1"
+          ? scheduleVacation908Dir1
+          : scheduleVacation908Dir2;
+      }
+    }
   };
 
   const selectDeparture = (time) => {
     setCurrentDeparture(time);
-    const scheduleKey = `${scheduleType}_${time}`;
-    setSelectedStops(savedSchedules[scheduleKey] || {});
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
+    setSelectedStops({ ...(savedSchedules[scheduleKey] || {}) });
     setView("stops");
   };
 
   const saveStops = () => {
-    const scheduleKey = getScheduleKey(scheduleType, currentDeparture);
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      currentDeparture,
+      busNumber,
+      direction
+    );
     const newSchedules = { ...savedSchedules, [scheduleKey]: selectedStops };
     setSavedSchedules(newSchedules);
     set(ref(database, "savedSchedules"), newSchedules);
@@ -86,7 +131,7 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
+    <div className={`container bus-${busNumber}`}>
       {view === "departures" && (
         <DeparturesList
           scheduleType={scheduleType}
@@ -100,6 +145,10 @@ function App() {
           setSentSMS={updateSentSMS}
           scrollPosition={scrollPosition}
           setScrollPosition={setScrollPosition}
+          busNumber={busNumber}
+          setBusNumber={setBusNumber}
+          direction={direction}
+          setDirection={setDirection}
         />
       )}
 
@@ -116,6 +165,9 @@ function App() {
           sentSMS={sentSMS}
           setSentSMS={updateSentSMS}
           savedSchedules={savedSchedules}
+          currentBusStops={getCurrentBusStops()}
+          busNumber={busNumber}
+          direction={direction}
         />
       )}
 

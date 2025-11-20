@@ -20,6 +20,10 @@ function DeparturesList({
   setSentSMS,
   scrollPosition,
   setScrollPosition,
+  busNumber,
+  setBusNumber,
+  direction,
+  setDirection,
 }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -33,7 +37,12 @@ function DeparturesList({
   const departures = Object.keys(getCurrentSchedule());
 
   const getSelectedCount = (time) => {
-    const scheduleKey = getScheduleKey(scheduleType, time);
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
     const stops = savedSchedules[scheduleKey] || {};
     return Object.values(stops).filter(Boolean).length;
   };
@@ -43,7 +52,12 @@ function DeparturesList({
     if (
       confirm(`Czy na pewno chcesz wyczyścić przystanki dla kursu o ${time}?`)
     ) {
-      const scheduleKey = getScheduleKey(scheduleType, time);
+      const scheduleKey = getScheduleKey(
+        scheduleType,
+        time,
+        busNumber,
+        direction
+      );
       const updated = { ...savedSchedules };
       delete updated[scheduleKey];
       setSavedSchedules(updated);
@@ -67,7 +81,12 @@ function DeparturesList({
   const copyDepartureList = async (e, time) => {
     e.stopPropagation();
 
-    const scheduleKey = getScheduleKey(scheduleType, time);
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
     const stops = savedSchedules[scheduleKey] || {};
     const schedule = getCurrentSchedule();
     const stopTimes = schedule[time] || {};
@@ -110,8 +129,44 @@ function DeparturesList({
           ⚙️
         </button>
         <h1>🚌 Odjazdy Autobusu</h1>
-        <p>Wybierz godzinę odjazdu</p>
+        <p>Wybierz autobus i godzinę odjazdu</p>
+
+        {/* Wybór autobusu */}
         <div style={{ marginTop: "15px", display: "flex", gap: "10px" }}>
+          <button
+            className={`schedule-toggle ${busNumber === "904" ? "active" : ""}`}
+            onClick={() => setBusNumber("904")}
+          >
+            🚌 904
+          </button>
+          <button
+            className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
+            onClick={() => setBusNumber("908")}
+          >
+            🚌 908
+          </button>
+        </div>
+
+        {/* Kierunek dla 908 */}
+        {busNumber === "908" && (
+          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+            <button
+              className={`schedule-toggle ${direction === "1" ? "active" : ""}`}
+              onClick={() => setDirection("1")}
+            >
+              ➡️ Chobolańska → Maczka
+            </button>
+            <button
+              className={`schedule-toggle ${direction === "2" ? "active" : ""}`}
+              onClick={() => setDirection("2")}
+            >
+              ⬅️ Maczka → Chobolańska
+            </button>
+          </div>
+        )}
+
+        {/* Typ rozkładu */}
+        <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
           <button
             className={`schedule-toggle ${
               scheduleType === "school" ? "active" : ""
@@ -136,7 +191,12 @@ function DeparturesList({
           const count = getSelectedCount(time);
           const hasSavedStops = count > 0;
           const formatted = formatDepartureLabel(time);
-          const scheduleKey = getScheduleKey(scheduleType, time);
+          const scheduleKey = getScheduleKey(
+            scheduleType,
+            time,
+            busNumber,
+            direction
+          );
           const smsSent = sentSMS[scheduleKey];
 
           return (
