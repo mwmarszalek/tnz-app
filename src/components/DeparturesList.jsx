@@ -26,6 +26,7 @@ function DeparturesList({
   setDirection,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [showDirectionModal, setShowDirectionModal] = useState(false);
 
   useEffect(() => {
     const content = document.querySelector(".content");
@@ -122,6 +123,27 @@ function DeparturesList({
     }
   };
 
+  const handleBusChange = (newBusNumber) => {
+    if (newBusNumber === "908") {
+      setShowDirectionModal(true);
+    } else {
+      setBusNumber(newBusNumber);
+    }
+  };
+
+  const handleDirectionSelect = (selectedDirection) => {
+    setBusNumber("908");
+    setDirection(selectedDirection);
+    setShowDirectionModal(false);
+  };
+
+  const get908Label = () => {
+    if (busNumber === "908") {
+      return direction === "1" ? "🚌 908 ➡️ Chobolańska" : "🚌 908 ➡️ Maczka";
+    }
+    return "🚌 908";
+  };
+
   return (
     <>
       <div className="header">
@@ -135,35 +157,17 @@ function DeparturesList({
         <div style={{ marginTop: "15px", display: "flex", gap: "10px" }}>
           <button
             className={`schedule-toggle ${busNumber === "904" ? "active" : ""}`}
-            onClick={() => setBusNumber("904")}
+            onClick={() => handleBusChange("904")}
           >
             🚌 904
           </button>
           <button
             className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
-            onClick={() => setBusNumber("908")}
+            onClick={() => handleBusChange("908")}
           >
-            🚌 908
+            {get908Label()}
           </button>
         </div>
-
-        {/* Kierunek dla 908 */}
-        {busNumber === "908" && (
-          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-            <button
-              className={`schedule-toggle ${direction === "1" ? "active" : ""}`}
-              onClick={() => setDirection("1")}
-            >
-              ➡️ Chobolańska → Maczka
-            </button>
-            <button
-              className={`schedule-toggle ${direction === "2" ? "active" : ""}`}
-              onClick={() => setDirection("2")}
-            >
-              ⬅️ Maczka → Chobolańska
-            </button>
-          </div>
-        )}
 
         {/* Typ rozkładu */}
         <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
@@ -276,13 +280,43 @@ function DeparturesList({
           <button
             className="btn btn-clear"
             onClick={clearAllData}
-            style={{ width: "100%", padding: "10px" }}
+            style={{ width: "100%", marginTop: "10px" }}
           >
             🗑️ Wyczyść wszystkie dane
           </button>
         )}
       </div>
 
+      {/* Modal wyboru kierunku dla 908 */}
+      {showDirectionModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowDirectionModal(false)}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Wybierz kierunek</h2>
+            <p>Wybierz kierunek jazdy autobusu 908:</p>
+            <div className="modal-buttons" style={{ flexDirection: "column" }}>
+              <button
+                className="btn btn-save"
+                onClick={() => handleDirectionSelect("1")}
+                style={{ width: "100%" }}
+              >
+                ➡️ Chobolańska
+              </button>
+              <button
+                className="btn btn-sms"
+                onClick={() => handleDirectionSelect("2")}
+                style={{ width: "100%" }}
+              >
+                ➡️ Maczka
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal raportu dziennego */}
       {showModal && (
         <DailyReportModal
           onClose={() => setShowModal(false)}
