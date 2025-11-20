@@ -15,6 +15,7 @@ import {
 } from "./data/schedules";
 import DeparturesList from "./components/DeparturesList";
 import StopsList from "./components/StopsList";
+import StopDetailsView from "./components/StopDetailsView";
 import Settings from "./components/Settings";
 import "./App.css";
 
@@ -24,6 +25,7 @@ function App() {
   const [busNumber, setBusNumber] = useState("904");
   const [direction, setDirection] = useState("1");
   const [currentDeparture, setCurrentDeparture] = useState(null);
+  const [currentStop, setCurrentStop] = useState(null);
   const [selectedStops, setSelectedStops] = useState({});
   const [savedSchedules, setSavedSchedules] = useState({});
   const [sentSMS, setSentSMS] = useState({});
@@ -107,6 +109,11 @@ function App() {
     setView("stops");
   };
 
+  const selectStop = (stopName) => {
+    setCurrentStop(stopName);
+    setView("stopDetails");
+  };
+
   const saveStops = () => {
     const scheduleKey = getScheduleKey(
       scheduleType,
@@ -140,6 +147,7 @@ function App() {
           savedSchedules={savedSchedules}
           setSavedSchedules={updateSavedSchedules}
           selectDeparture={selectDeparture}
+          selectStop={selectStop}
           setView={setView}
           sentSMS={sentSMS}
           setSentSMS={updateSentSMS}
@@ -168,6 +176,20 @@ function App() {
           currentBusStops={getCurrentBusStops()}
           busNumber={busNumber}
           direction={direction}
+        />
+      )}
+
+      {view === "stopDetails" && (
+        <StopDetailsView
+          stopName={currentStop}
+          scheduleType={scheduleType}
+          setView={setView}
+          savedSchedules={savedSchedules}
+          setSavedSchedules={updateSavedSchedules}
+          busNumber={busNumber}
+          sentSMS={sentSMS}
+          setSentSMS={updateSentSMS}
+          driverPhone={driverPhone}
         />
       )}
 
