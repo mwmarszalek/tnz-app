@@ -364,7 +364,7 @@ function DeparturesList({
                 ➡️ Chobolańska
               </button>
               <button
-                className="btn btn-sms"
+                className="btn btn-orange"
                 onClick={() => handleDirectionSelect("2")}
                 style={{ width: "100%" }}
               >

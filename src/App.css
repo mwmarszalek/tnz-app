@@ -389,6 +389,16 @@ body {
   box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4);
 }
 
+.btn-orange {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+}
+
+.btn-orange:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(249, 115, 22, 0.4);
+}
+
 .settings-form {
   padding: 20px;
 }
