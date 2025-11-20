@@ -4,7 +4,7 @@ import {
   copyToClipboardFallback,
 } from "../utils/helpers";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import DailyReportModal from "./DailyReportModal";
 
@@ -27,6 +27,10 @@ function DeparturesList({
 }) {
   const [showModal, setShowModal] = useState(false);
   const [showDirectionModal, setShowDirectionModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   useEffect(() => {
     const content = document.querySelector(".content");
@@ -34,6 +38,28 @@ function DeparturesList({
       content.scrollTop = scrollPosition;
     }
   }, [scrollPosition]);
+
+  // Zamknij menu po kliknięciu poza nim
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(e.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   const departures = Object.keys(getCurrentSchedule());
 
@@ -73,6 +99,7 @@ function DeparturesList({
     if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane?")) {
       setSavedSchedules({});
       setSentSMS({});
+      setMenuOpen(false);
     }
   };
 
@@ -150,6 +177,7 @@ function DeparturesList({
         <button className="settings-btn" onClick={() => setView("settings")}>
           ⚙️
         </button>
+
         <h1>🚌 Odjazdy Autobusu</h1>
         <p>Wybierz autobus i godzinę odjazdu</p>
 
@@ -169,8 +197,15 @@ function DeparturesList({
           </button>
         </div>
 
-        {/* Typ rozkładu */}
-        <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
           <button
             className={`schedule-toggle ${
               scheduleType === "school" ? "active" : ""
@@ -187,6 +222,49 @@ function DeparturesList({
           >
             🏖️ Dni wolne
           </button>
+
+          <button
+            className="menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            ref={menuButtonRef}
+            style={{
+              position: "absolute",
+              right: "0",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            ⋮
+          </button>
+
+          {menuOpen && (
+            <div
+              className="dropdown-menu"
+              ref={menuRef}
+              style={{
+                top: "60px",
+                right: "0",
+              }}
+            >
+              <button
+                className="menu-item"
+                onClick={() => {
+                  setShowModal(true);
+                  setMenuOpen(false);
+                }}
+              >
+                📊 Wyślij raport dzienny
+              </button>
+              {hasAnyData && (
+                <button
+                  className="menu-item clear-menu-item"
+                  onClick={clearAllData}
+                >
+                  🗑️ Wyczyść wszystkie dane
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -268,26 +346,7 @@ function DeparturesList({
           );
         })}
       </div>
-      <div style={{ padding: "20px" }}>
-        <button
-          className="btn btn-save"
-          onClick={() => setShowModal(true)}
-          style={{ width: "100%" }}
-        >
-          📊 Wyślij raport dzienny
-        </button>
-        {hasAnyData && (
-          <button
-            className="btn btn-clear"
-            onClick={clearAllData}
-            style={{ width: "100%", marginTop: "10px" }}
-          >
-            🗑️ Wyczyść wszystkie dane
-          </button>
-        )}
-      </div>
 
-      {/* Modal wyboru kierunku dla 908 */}
       {showDirectionModal && (
         <div
           className="modal-overlay"
@@ -316,7 +375,6 @@ function DeparturesList({
         </div>
       )}
 
-      {/* Modal raportu dziennego */}
       {showModal && (
         <DailyReportModal
           onClose={() => setShowModal(false)}
