@@ -16,6 +16,10 @@ import {
 import DeparturesList from "./components/DeparturesList";
 import StopsList from "./components/StopsList";
 import Settings from "./components/Settings";
+import {
+  requestNotificationPermission,
+  onMessageListener,
+} from "./firebase-messaging";
 import "./App.css";
 
 function App() {
@@ -44,7 +48,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Nasłuchuj zmian sentSMS w Firebase
   useEffect(() => {
     const smsRef = ref(database, "sentSMS");
     const unsubscribe = onValue(smsRef, (snapshot) => {
@@ -55,12 +58,21 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Zmiana klasy body przy zmianie autobusu (animacja kolorów)
+  useEffect(() => {
+    requestNotificationPermission();
+
+    onMessageListener()
+      .then((payload) => {
+        console.log("Otrzymano powiadomienie:", payload);
+        // Pokaż powiadomienie w UI
+      })
+      .catch((err) => console.log("Błąd:", err));
+  }, []);
+
   useEffect(() => {
     document.body.className = `bus-${busNumber}`;
   }, [busNumber]);
 
-  // 🔄 Automatyczne czyszczenie danych o 19:25
   useAutoClear(() => {
     set(ref(database, "savedSchedules"), {});
     set(ref(database, "sentSMS"), {});
