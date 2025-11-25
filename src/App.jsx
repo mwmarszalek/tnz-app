@@ -3,6 +3,7 @@ import { database, ref, set, onValue } from "./firebase";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useAutoClear } from "./hooks/useAutoClear";
 import { getScheduleKey } from "./utils/helpers";
+import { onMessageListener } from "./firebase-messaging";
 import {
   scheduleSchool904,
   scheduleVacation904,
@@ -67,6 +68,23 @@ function App() {
     setSelectedStops({});
     setView("departures");
   });
+
+  useEffect(() => {
+    onMessageListener()
+      .then((payload) => {
+        console.log("📱 Powiadomienie foreground:", payload);
+
+        if (Notification.permission === "granted") {
+          new Notification(payload.notification.title, {
+            body: payload.notification.body,
+            icon: "/icon-192x192.png",
+            vibrate: [200, 100, 200, 100, 200],
+            requireInteraction: true,
+          });
+        }
+      })
+      .catch((err) => console.log("Błąd:", err));
+  }, []);
 
   const getCurrentBusStops = () => {
     if (busNumber === "904") {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { requestNotificationPermission } from "../firebase-messaging";
 
 function Settings({ driverPhone, setDriverPhone, setView }) {
   const [phoneInput, setPhoneInput] = useState(driverPhone);
@@ -21,6 +22,14 @@ function Settings({ driverPhone, setDriverPhone, setView }) {
     setDriverPhone(cleanPhone);
     alert(`✅ Numer zapisany: ${cleanPhone}`);
     setView("departures");
+  };
+  const handleEnableNotifications = async () => {
+    const token = await requestNotificationPermission();
+    if (token) {
+      alert("✅ Powiadomienia włączone!");
+    } else {
+      alert("❌ Nie udało się włączyć powiadomień");
+    }
   };
 
   return (
@@ -56,6 +65,13 @@ function Settings({ driverPhone, setDriverPhone, setView }) {
         <div className="action-buttons">
           <button className="btn btn-save" onClick={savePhoneNumber}>
             💾 Zapisz numer
+          </button>
+          <button
+            onClick={handleEnableNotifications}
+            className="btn btn-save"
+            style={{ width: "100%", marginTop: "20px" }}
+          >
+            🔔 Włącz powiadomienia
           </button>
         </div>
       </div>
