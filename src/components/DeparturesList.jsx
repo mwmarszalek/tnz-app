@@ -192,6 +192,13 @@ function DeparturesList({
           <button
             className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
             onClick={() => handleBusChange("908")}
+            disabled={true}
+            style={{
+              opacity: 0.5,
+              cursor: "not-allowed",
+              filter: "grayscale(100%)",
+            }}
+            title="Rozkład wkrótce dostępny"
           >
             {get908Label()}
           </button>
