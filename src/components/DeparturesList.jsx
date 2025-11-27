@@ -4,7 +4,7 @@ import {
   copyToClipboardFallback,
 } from "../utils/helpers";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import DailyReportModal from "./DailyReportModal";
 
@@ -20,8 +20,17 @@ function DeparturesList({
   setSentSMS,
   scrollPosition,
   setScrollPosition,
+  busNumber,
+  setBusNumber,
+  direction,
+  setDirection,
 }) {
   const [showModal, setShowModal] = useState(false);
+  const [showDirectionModal, setShowDirectionModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   useEffect(() => {
     const content = document.querySelector(".content");
@@ -30,10 +39,37 @@ function DeparturesList({
     }
   }, [scrollPosition]);
 
+  // Zamknij menu po kliknięciu poza nim
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(e.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
   const departures = Object.keys(getCurrentSchedule());
 
   const getSelectedCount = (time) => {
-    const scheduleKey = getScheduleKey(scheduleType, time);
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
     const stops = savedSchedules[scheduleKey] || {};
     return Object.values(stops).filter(Boolean).length;
   };
@@ -43,7 +79,12 @@ function DeparturesList({
     if (
       confirm(`Czy na pewno chcesz wyczyścić przystanki dla kursu o ${time}?`)
     ) {
-      const scheduleKey = getScheduleKey(scheduleType, time);
+      const scheduleKey = getScheduleKey(
+        scheduleType,
+        time,
+        busNumber,
+        direction
+      );
       const updated = { ...savedSchedules };
       delete updated[scheduleKey];
       setSavedSchedules(updated);
@@ -58,6 +99,7 @@ function DeparturesList({
     if (confirm("Czy na pewno chcesz wyczyścić wszystkie dane?")) {
       setSavedSchedules({});
       setSentSMS({});
+      setMenuOpen(false);
     }
   };
 
@@ -67,7 +109,12 @@ function DeparturesList({
   const copyDepartureList = async (e, time) => {
     e.stopPropagation();
 
-    const scheduleKey = getScheduleKey(scheduleType, time);
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
     const stops = savedSchedules[scheduleKey] || {};
     const schedule = getCurrentSchedule();
     const stopTimes = schedule[time] || {};
@@ -103,15 +150,62 @@ function DeparturesList({
     }
   };
 
+  const handleBusChange = (newBusNumber) => {
+    if (newBusNumber === "908") {
+      setShowDirectionModal(true);
+    } else {
+      setBusNumber(newBusNumber);
+    }
+  };
+
+  const handleDirectionSelect = (selectedDirection) => {
+    setBusNumber("908");
+    setDirection(selectedDirection);
+    setShowDirectionModal(false);
+  };
+
+  const get908Label = () => {
+    if (busNumber === "908") {
+      return direction === "1" ? "🚌 908 ➡️ Chobolańska" : "🚌 908 ➡️ Maczka";
+    }
+    return "🚌 908";
+  };
+
   return (
     <>
       <div className="header">
         <button className="settings-btn" onClick={() => setView("settings")}>
           ⚙️
         </button>
+
         <h1>🚌 Odjazdy Autobusu</h1>
-        <p>Wybierz godzinę odjazdu</p>
+        <p>Wybierz autobus i godzinę odjazdu</p>
+
+        {/* Wybór autobusu */}
         <div style={{ marginTop: "15px", display: "flex", gap: "10px" }}>
+          <button
+            className={`schedule-toggle ${busNumber === "904" ? "active" : ""}`}
+            onClick={() => handleBusChange("904")}
+          >
+            🚌 904
+          </button>
+          <button
+            className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
+            onClick={() => handleBusChange("908")}
+          >
+            {get908Label()}
+          </button>
+        </div>
+
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            gap: "10px",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
           <button
             className={`schedule-toggle ${
               scheduleType === "school" ? "active" : ""
@@ -128,6 +222,49 @@ function DeparturesList({
           >
             🏖️ Dni wolne
           </button>
+
+          <button
+            className="menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            ref={menuButtonRef}
+            style={{
+              position: "absolute",
+              right: "0",
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}
+          >
+            ⋮
+          </button>
+
+          {menuOpen && (
+            <div
+              className="dropdown-menu"
+              ref={menuRef}
+              style={{
+                top: "60px",
+                right: "0",
+              }}
+            >
+              <button
+                className="menu-item"
+                onClick={() => {
+                  setShowModal(true);
+                  setMenuOpen(false);
+                }}
+              >
+                📊 Wyślij raport dzienny
+              </button>
+              {hasAnyData && (
+                <button
+                  className="menu-item clear-menu-item"
+                  onClick={clearAllData}
+                >
+                  🗑️ Wyczyść wszystkie dane
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -136,7 +273,12 @@ function DeparturesList({
           const count = getSelectedCount(time);
           const hasSavedStops = count > 0;
           const formatted = formatDepartureLabel(time);
-          const scheduleKey = getScheduleKey(scheduleType, time);
+          const scheduleKey = getScheduleKey(
+            scheduleType,
+            time,
+            busNumber,
+            direction
+          );
           const smsSent = sentSMS[scheduleKey];
 
           return (
@@ -204,24 +346,34 @@ function DeparturesList({
           );
         })}
       </div>
-      <div style={{ padding: "20px" }}>
-        <button
-          className="btn btn-save"
-          onClick={() => setShowModal(true)}
-          style={{ width: "100%" }}
+
+      {showDirectionModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowDirectionModal(false)}
         >
-          📊 Wyślij raport dzienny
-        </button>
-        {hasAnyData && (
-          <button
-            className="btn btn-clear"
-            onClick={clearAllData}
-            style={{ width: "100%", padding: "10px" }}
-          >
-            🗑️ Wyczyść wszystkie dane
-          </button>
-        )}
-      </div>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Wybierz kierunek</h2>
+            <p>Wybierz kierunek jazdy autobusu 908:</p>
+            <div className="modal-buttons" style={{ flexDirection: "column" }}>
+              <button
+                className="btn btn-save"
+                onClick={() => handleDirectionSelect("1")}
+                style={{ width: "100%" }}
+              >
+                ➡️ Chobolańska
+              </button>
+              <button
+                className="btn btn-orange"
+                onClick={() => handleDirectionSelect("2")}
+                style={{ width: "100%" }}
+              >
+                ➡️ Maczka
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <DailyReportModal

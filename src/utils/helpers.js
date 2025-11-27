@@ -8,10 +8,17 @@ export function formatDepartureLabel(label) {
   return { time, subtitle };
 }
 
-export const getScheduleKey = (scheduleType, time) => {
-  // Usuń znaki specjalne z czasu
+export const getScheduleKey = (
+  scheduleType,
+  time,
+  busNumber = "904",
+  direction = "1"
+) => {
   const cleanTime = time.replace(/[.#$[\]/():\s]/g, "_");
-  return `${scheduleType}_${cleanTime}`;
+  if (busNumber === "908") {
+    return `${busNumber}_${direction}_${scheduleType}_${cleanTime}`;
+  }
+  return `${busNumber}_${scheduleType}_${cleanTime}`;
 };
 
 export function copyToClipboardFallback(text) {

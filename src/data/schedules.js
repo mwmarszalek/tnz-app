@@ -1,24 +1,48 @@
-export const busStops = [
-  "SKM Podjuchy",
-  "Skalista",
-  "Metalowa",
-  "Szlamowa",
-  "Granitowa",
-  "Zamieć",
-  "Ostowa",
-  "Lechicka",
-  "Chojnicka",
-  "Mielecka",
-  "Sąsiedzka",
-  "Chromowa",
-  "Ruda",
-  "Wschodnia",
-  "Grzegorzewskiej",
-  "Chełmińska",
-  "Miechowska",
-];
+export const busStops = {
+  904: [
+    "SKM Podjuchy",
+    "Skalista",
+    "Metalowa",
+    "Szlamowa",
+    "Granitowa",
+    "Zamieć",
+    "Ostowa",
+    "Lechicka",
+    "Chojnicka",
+    "Mielecka",
+    "Sąsiedzka",
+    "Chromowa",
+    "Ruda",
+    "Wschodnia",
+    "Grzegorzewskiej",
+    "Chełmińska",
+    "Miechowska",
+  ],
+  908: {
+    direction1: [
+      "Chobolańska Szkoła",
+      "Poronińska",
+      "Krakowska - Rubież",
+      "Świętej Kingi",
+      "Kwiatowa",
+      "Gumieńce",
+      "Polskich Marynarzy",
+      "Maczka",
+    ],
+    direction2: [
+      "Maczka",
+      "Polskich Marynarzy",
+      "Gumieńce",
+      "Kwiatowa",
+      "Świętej Kingi",
+      "Krakowska - Rubież",
+      "Poronińska",
+      "Chobolańska Szkoła",
+    ],
+  },
+};
 
-export const scheduleSchool = {
+export const scheduleSchool904 = {
   "06:27 (kurs dojazdowy)": {
     Sąsiedzka: "06:27",
 
@@ -653,7 +677,7 @@ export const scheduleSchool = {
 };
 // ROZKŁAD JAZDY - DNI WOLNE OD NAUKI
 
-export const scheduleVacation = {
+export const scheduleVacation904 = {
   "06:27 (kurs dojazdowy)": {
     Sąsiedzka: "06:27",
 
@@ -1284,6 +1308,118 @@ export const scheduleVacation = {
     Chełmińska: "16:32",
 
     Miechowska: "16:33",
+  },
+};
+
+export const scheduleSchool908Dir1 = {
+  "07:00": {
+    "Chobolańska Szkoła": "07:00",
+    Poronińska: "07:03",
+    "Krakowska - Rubież": "07:06",
+    "Świętej Kingi": "07:09",
+    Kwiatowa: "07:12",
+    Gumieńce: "07:15",
+    "Polskich Marynarzy": "07:18",
+    Maczka: "07:21",
+  },
+  "08:30": {
+    "Chobolańska Szkoła": "08:30",
+    Poronińska: "08:33",
+    "Krakowska - Rubież": "08:36",
+    "Świętej Kingi": "08:39",
+    Kwiatowa: "08:42",
+    Gumieńce: "08:45",
+    "Polskich Marynarzy": "08:48",
+    Maczka: "08:51",
+  },
+  "10:00": {
+    "Chobolańska Szkoła": "10:00",
+    Poronińska: "10:03",
+    "Krakowska - Rubież": "10:06",
+    "Świętej Kingi": "10:09",
+    Kwiatowa: "10:12",
+    Gumieńce: "10:15",
+    "Polskich Marynarzy": "10:18",
+    Maczka: "10:21",
+  },
+};
+
+export const scheduleSchool908Dir2 = {
+  "07:30": {
+    Maczka: "07:30",
+    "Polskich Marynarzy": "07:33",
+    Gumieńce: "07:36",
+    Kwiatowa: "07:39",
+    "Świętej Kingi": "07:42",
+    "Krakowska - Rubież": "07:45",
+    Poronińska: "07:48",
+    "Chobolańska Szkoła": "07:51",
+  },
+  "09:00": {
+    Maczka: "09:00",
+    "Polskich Marynarzy": "09:03",
+    Gumieńce: "09:06",
+    Kwiatowa: "09:09",
+    "Świętej Kingi": "09:12",
+    "Krakowska - Rubież": "09:15",
+    Poronińska: "09:18",
+    "Chobolańska Szkoła": "09:21",
+  },
+  "10:30": {
+    Maczka: "10:30",
+    "Polskich Marynarzy": "10:33",
+    Gumieńce: "10:36",
+    Kwiatowa: "10:39",
+    "Świętej Kingi": "10:42",
+    "Krakowska - Rubież": "10:45",
+    Poronińska: "10:48",
+    "Chobolańska Szkoła": "10:51",
+  },
+};
+
+export const scheduleVacation908Dir1 = {
+  "08:00": {
+    "Chobolańska Szkoła": "08:00",
+    Poronińska: "08:03",
+    "Krakowska - Rubież": "08:06",
+    "Świętej Kingi": "08:09",
+    Kwiatowa: "08:12",
+    Gumieńce: "08:15",
+    "Polskich Marynarzy": "08:18",
+    Maczka: "08:21",
+  },
+  "11:00": {
+    "Chobolańska Szkoła": "11:00",
+    Poronińska: "11:03",
+    "Krakowska - Rubież": "11:06",
+    "Świętej Kingi": "11:09",
+    Kwiatowa: "11:12",
+    Gumieńce: "11:15",
+    "Polskich Marynarzy": "11:18",
+    Maczka: "11:21",
+  },
+};
+
+export const scheduleVacation908Dir2 = {
+  "08:30": {
+    Maczka: "08:30",
+    "Polskich Marynarzy": "08:33",
+    Gumieńce: "08:36",
+    Kwiatowa: "08:39",
+    "Świętej Kingi": "08:42",
+    "Krakowska - Rubież": "08:45",
+    Poronińska: "08:48",
+    "Chobolańska Szkoła": "08:51",
+  },
+  "11:30": {
+    Maczka: "11:30",
+    "Polskich Marynarzy": "11:33",
+    Gumieńce: "11:36",
+    Kwiatowa: "11:39",
+    "Świętej Kingi": "11:42",
+    "Krakowska - Rubież": "11:45",
+    Poronińska: "11:48",
+    "Chobolańska Szkoła": "11:51",
   },
 };
 
