@@ -387,7 +387,6 @@ function DeparturesList({
           onClose={() => setShowModal(false)}
           savedSchedules={savedSchedules}
           scheduleType={scheduleType}
-          getCurrentSchedule={getCurrentSchedule}
           setSavedSchedules={setSavedSchedules}
           setSentSMS={setSentSMS}
         />
