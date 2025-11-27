@@ -66,11 +66,7 @@ function Settings({ driverPhone, setDriverPhone, setView }) {
           <button className="btn btn-save" onClick={savePhoneNumber}>
             💾 Zapisz numer
           </button>
-          <button
-            onClick={handleEnableNotifications}
-            className="btn btn-save"
-            style={{ width: "100%", marginTop: "20px" }}
-          >
+          <button onClick={handleEnableNotifications} className="btn btn-save">
             🔔 Włącz powiadomienia
           </button>
         </div>
