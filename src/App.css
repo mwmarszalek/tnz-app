@@ -227,21 +227,31 @@ body {
 
 .departure-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   padding: 0 20px 15px 20px;
   border-top: 1px solid #f0f0f0;
   padding-top: 15px;
+  flex-wrap: wrap;
 }
 
 .departure-btn-small {
   flex: 1;
-  padding: 12px;
+  min-width: 80px;
+  padding: 10px 8px;
   border: none;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+  .departure-btn-small {
+    font-size: 12px;
+    padding: 8px 6px;
+  }
 }
 
 .copy-small {
@@ -256,6 +266,16 @@ body {
 
 .copy-small.copied {
   background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+}
+
+.sms-small {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+}
+
+.sms-small:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
 }
 
 .clear-small {

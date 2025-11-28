@@ -20,7 +20,6 @@ function StopsList({
   const [menuOpen, setMenuOpen] = useState(false);
   const isInitialMount = useRef(true);
 
-  // Załaduj zapisane przystanki przy wejściu
   useEffect(() => {
     const scheduleKey = getScheduleKey(
       scheduleType,
@@ -29,7 +28,7 @@ function StopsList({
       direction
     );
     setSelectedStops(savedSchedules[scheduleKey] || {});
-    isInitialMount.current = true; // Reset flagi przy zmianie kursu
+    isInitialMount.current = true;
   }, [
     currentDeparture,
     scheduleType,
@@ -39,7 +38,6 @@ function StopsList({
     direction,
   ]);
 
-  // Auto-save przy każdej zmianie selectedStops (ale nie przy pierwszym renderze)
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -51,7 +49,6 @@ function StopsList({
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
-  // Zamknięcie menu po kliknięciu poza nim
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (

@@ -32,7 +32,6 @@ function App() {
     DEFAULT_PHONE
   );
 
-  // Nasłuchuj zmian savedSchedules w Firebase
   useEffect(() => {
     const schedulesRef = ref(database, "savedSchedules");
     const unsubscribe = onValue(schedulesRef, (snapshot) => {
@@ -43,7 +42,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Nasłuchuj zmian sentSMS w Firebase
   useEffect(() => {
     const smsRef = ref(database, "sentSMS");
     const unsubscribe = onValue(smsRef, (snapshot) => {
@@ -54,7 +52,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Zmiana klasy body przy zmianie autobusu (animacja kolorów)
   useEffect(() => {
     document.body.className = `bus-${busNumber}`;
   }, [busNumber]);
@@ -98,7 +95,6 @@ function App() {
     setView("stops");
   };
 
-  // Auto-save funkcja (bez zmiany widoku)
   const autoSaveStops = useCallback(() => {
     const scheduleKey = getScheduleKey(
       scheduleType,
@@ -140,6 +136,7 @@ function App() {
           setBusNumber={setBusNumber}
           direction={direction}
           setDirection={setDirection}
+          driverPhone={driverPhone}
         />
       )}
 
