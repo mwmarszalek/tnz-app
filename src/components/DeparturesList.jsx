@@ -198,6 +198,49 @@ function DeparturesList({
     return minutesDiff <= 5 && minutesDiff >= -5;
   };
 
+  const getNextDeparture = () => {
+    const now = currentTime;
+    let nextDeparture = null;
+    let minDiff = Infinity;
+
+    departures.forEach((time) => {
+      const timeMatch = time.match(/^(\d{2}):(\d{2})/);
+      if (!timeMatch) return;
+
+      const hours = parseInt(timeMatch[1], 10);
+      const minutes = parseInt(timeMatch[2], 10);
+
+      const departure = new Date(now);
+      departure.setHours(hours, minutes, 0, 0);
+
+      const timeDiff = departure.getTime() - now.getTime();
+
+      if (timeDiff > 0 && timeDiff < minDiff) {
+        minDiff = timeDiff;
+        nextDeparture = time;
+      }
+    });
+
+    return nextDeparture;
+  };
+
+  const getMinutesToDeparture = (departureTime) => {
+    const timeMatch = departureTime.match(/^(\d{2}):(\d{2})/);
+    if (!timeMatch) return null;
+
+    const hours = parseInt(timeMatch[1], 10);
+    const minutes = parseInt(timeMatch[2], 10);
+
+    const now = currentTime;
+    const departure = new Date(now);
+    departure.setHours(hours, minutes, 0, 0);
+
+    const timeDiff = departure.getTime() - now.getTime();
+    const minutesDiff = Math.floor(timeDiff / 1000 / 60);
+
+    return minutesDiff;
+  };
+
   const sendSMSForDeparture = (e, time) => {
     e.stopPropagation();
 
@@ -346,9 +389,18 @@ function DeparturesList({
           );
           const smsSent = sentSMS[scheduleKey];
           const showSMSButton = isSMSButtonVisible(time);
+          const isNextDeparture = getNextDeparture() === time;
 
           return (
-            <div key={time} className="departure-item">
+            <div key={time} className={`departure-item ${isNextDeparture ? "next-departure" : ""}`}>
+              {isNextDeparture && (
+                <div className="next-departure-badge">
+                  <span className="pulse-dot"></span>
+                  <span className="next-departure-text">
+                    Najbliższy odjazd (za {getMinutesToDeparture(time)} min)
+                  </span>
+                </div>
+              )}
               <div
                 className="departure-main"
                 onClick={() => {
