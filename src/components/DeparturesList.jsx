@@ -24,13 +24,23 @@ function DeparturesList({
   setBusNumber,
   direction,
   setDirection,
+  driverPhone,
 }) {
   const [showModal, setShowModal] = useState(false);
   const [showDirectionModal, setShowDirectionModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const content = document.querySelector(".content");
@@ -39,7 +49,6 @@ function DeparturesList({
     }
   }, [scrollPosition]);
 
-  // Zamknij menu po kliknięciu poza nim
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -169,6 +178,54 @@ function DeparturesList({
       return direction === "1" ? "🚌 908 ➡️ Chobolańska" : "🚌 908 ➡️ Maczka";
     }
     return "🚌 908";
+  };
+
+  const isSMSButtonVisible = (departureTime) => {
+    const timeMatch = departureTime.match(/^(\d{2}):(\d{2})/);
+    if (!timeMatch) return false;
+
+    const hours = parseInt(timeMatch[1], 10);
+    const minutes = parseInt(timeMatch[2], 10);
+
+    const now = currentTime;
+    const departure = new Date(now);
+    departure.setHours(hours, minutes, 0, 0);
+
+    const timeDiff = departure.getTime() - now.getTime();
+    const minutesDiff = timeDiff / 1000 / 60;
+
+    return minutesDiff <= 5 && minutesDiff >= -5;
+  };
+
+  const sendSMSForDeparture = (e, time) => {
+    e.stopPropagation();
+
+    const scheduleKey = getScheduleKey(
+      scheduleType,
+      time,
+      busNumber,
+      direction
+    );
+    const stops = savedSchedules[scheduleKey] || {};
+    const schedule = getCurrentSchedule();
+    const stopTimes = schedule[time] || {};
+
+    const selectedStopNames = Object.keys(stops).filter((stop) => stops[stop]);
+
+    let text;
+    if (selectedStopNames.length === 0) {
+      text = `Kurs o godzinie ${time} - brak zamówionych przystanków.`;
+    } else {
+      text = `Lista przystanków na kurs o godzinie ${time}:\n\n${selectedStopNames
+        .map((stop, i) => `${i + 1}. ${stop} - ${stopTimes[stop] || "--:--"}`)
+        .join("\n")}`;
+    }
+
+    setSentSMS({ ...sentSMS, [scheduleKey]: true });
+
+    const encodedText = encodeURIComponent(text);
+    const smsURL = `sms:${driverPhone}?body=${encodedText}`;
+    window.location.href = smsURL;
   };
 
   return (
@@ -331,22 +388,32 @@ function DeparturesList({
                 </div>
               </div>
 
-              {(hasSavedStops || smsSent) && (
+              {(isSMSButtonVisible(time) || hasSavedStops || smsSent) && (
                 <div className="departure-buttons">
+                  {(isSMSButtonVisible(time) || hasSavedStops) && !smsSent && (
+                    <button
+                      className="departure-btn-small sms-small"
+                      onClick={(e) => sendSMSForDeparture(e, time)}
+                    >
+                      📱 SMS
+                    </button>
+                  )}
                   {hasSavedStops && (
                     <button
                       className="departure-btn-small copy-small"
                       onClick={(e) => copyDepartureList(e, time)}
                     >
-                      📋 Skopiuj
+                      📋 Kopia
                     </button>
                   )}
-                  <button
-                    className="departure-btn-small clear-small"
-                    onClick={(e) => clearDeparture(e, time)}
-                  >
-                    🗑️ Wyczyść
-                  </button>
+                  {(hasSavedStops || smsSent) && (
+                    <button
+                      className="departure-btn-small clear-small"
+                      onClick={(e) => clearDeparture(e, time)}
+                    >
+                      🗑️ Wyczyść
+                    </button>
+                  )}
                 </div>
               )}
             </div>

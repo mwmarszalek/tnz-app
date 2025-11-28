@@ -6,7 +6,7 @@ function StopsList({
   selectedStops,
   setSelectedStops,
   getCurrentSchedule,
-  saveStops,
+  autoSaveStops,
   setView,
   driverPhone,
   scheduleType,
@@ -18,8 +18,8 @@ function StopsList({
   direction,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const isInitialMount = useRef(true);
 
-  // Załaduj zapisane przystanki przy wejściu
   useEffect(() => {
     const scheduleKey = getScheduleKey(
       scheduleType,
@@ -28,6 +28,7 @@ function StopsList({
       direction
     );
     setSelectedStops(savedSchedules[scheduleKey] || {});
+    isInitialMount.current = true;
   }, [
     currentDeparture,
     scheduleType,
@@ -37,10 +38,17 @@ function StopsList({
     direction,
   ]);
 
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    autoSaveStops();
+  }, [selectedStops, autoSaveStops]);
+
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
-  // Zamknięcie menu po kliknięciu poza nim
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -137,10 +145,7 @@ function StopsList({
       <div className="header">
         <button
           className="back-btn"
-          onClick={() => {
-            saveStops();
-            setView("departures");
-          }}
+          onClick={() => setView("departures")}
         >
           ← Powrót
         </button>
@@ -195,8 +200,8 @@ function StopsList({
       </div>
 
       <div className="action-buttons">
-        <button className="btn btn-save" onClick={saveStops}>
-          💾 Zapisz
+        <button className="btn btn-save" onClick={() => setView("departures")}>
+          ✓ Gotowe
         </button>
         <button className="btn btn-sms" onClick={sendSMS}>
           📱 Wyślij SMS
