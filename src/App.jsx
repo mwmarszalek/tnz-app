@@ -98,7 +98,8 @@ function App() {
     setView("stops");
   };
 
-  const saveStops = () => {
+  // Auto-save funkcja (bez zmiany widoku)
+  const autoSaveStops = useCallback(() => {
     const scheduleKey = getScheduleKey(
       scheduleType,
       currentDeparture,
@@ -108,8 +109,7 @@ function App() {
     const newSchedules = { ...savedSchedules, [scheduleKey]: selectedStops };
     setSavedSchedules(newSchedules);
     set(ref(database, "savedSchedules"), newSchedules);
-    setView("departures");
-  };
+  }, [scheduleType, currentDeparture, busNumber, direction, savedSchedules, selectedStops]);
 
   const updateSentSMS = (newSMS) => {
     setSentSMS(newSMS);
@@ -149,7 +149,7 @@ function App() {
           selectedStops={selectedStops}
           setSelectedStops={setSelectedStops}
           getCurrentSchedule={getCurrentSchedule}
-          saveStops={saveStops}
+          autoSaveStops={autoSaveStops}
           setView={setView}
           driverPhone={driverPhone}
           scheduleType={scheduleType}
