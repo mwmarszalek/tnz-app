@@ -392,7 +392,7 @@ function DeparturesList({
           const isNextDeparture = getNextDeparture() === time;
 
           return (
-            <div key={time} className={`departure-item ${isNextDeparture ? "next-departure" : ""}`}>
+            <div key={time} className={`departure-item ${isNextDeparture ? "next-departure" : ""} ${smsSent ? "sms-sent" : ""}`}>
               {isNextDeparture && (
                 <div className="next-departure-badge">
                   <span className="pulse-dot"></span>
@@ -410,7 +410,7 @@ function DeparturesList({
                 }}
               >
                 <div className="departure-time">
-                  <div className="time-icon">🕐</div>
+                  <div className="time-icon">{smsSent ? "✓" : "🕐"}</div>
                   <span className="time-text">
                     {typeof formatted === "string" ? (
                       formatted
