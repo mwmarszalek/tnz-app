@@ -71,6 +71,7 @@ function DeparturesList({
   }, [menuOpen]);
 
   const departures = Object.keys(getCurrentSchedule());
+  const _forceUpdate = currentTime.getTime();
 
   const getSelectedCount = (time) => {
     const scheduleKey = getScheduleKey(
@@ -344,6 +345,7 @@ function DeparturesList({
             direction
           );
           const smsSent = sentSMS[scheduleKey];
+          const showSMSButton = isSMSButtonVisible(time);
 
           return (
             <div key={time} className="departure-item">
@@ -388,9 +390,9 @@ function DeparturesList({
                 </div>
               </div>
 
-              {(isSMSButtonVisible(time) || hasSavedStops || smsSent) && (
+              {(showSMSButton || hasSavedStops || smsSent) && (
                 <div className="departure-buttons">
-                  {(isSMSButtonVisible(time) || hasSavedStops) && !smsSent && (
+                  {(showSMSButton || hasSavedStops) && !smsSent && (
                     <button
                       className="departure-btn-small sms-small"
                       onClick={(e) => sendSMSForDeparture(e, time)}
