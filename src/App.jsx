@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { database, ref, set, onValue } from "./firebase";
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import { useAutoClear } from "./hooks/useAutoClear";
 import { getScheduleKey } from "./utils/helpers";
 import {
   scheduleSchool904,
@@ -59,14 +58,6 @@ function App() {
   useEffect(() => {
     document.body.className = `bus-${busNumber}`;
   }, [busNumber]);
-
-  // 🔄 Automatyczne czyszczenie danych o 19:25
-  useAutoClear(() => {
-    set(ref(database, "savedSchedules"), {});
-    set(ref(database, "sentSMS"), {});
-    setSelectedStops({});
-    setView("departures");
-  });
 
   const getCurrentBusStops = () => {
     if (busNumber === "904") {
