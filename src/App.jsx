@@ -15,6 +15,7 @@ import {
 import DeparturesList from "./components/DeparturesList";
 import StopsList from "./components/StopsList";
 import Settings from "./components/Settings";
+import DriverMap from "./components/DriverMap";
 import "./App.css";
 
 function App() {
@@ -166,6 +167,8 @@ function App() {
           setView={setView}
         />
       )}
+
+      {view === "map" && <DriverMap setView={setView} />}
     </div>
   );
 }

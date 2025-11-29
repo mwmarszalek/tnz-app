@@ -357,6 +357,15 @@ function DeparturesList({
               <button
                 className="menu-item"
                 onClick={() => {
+                  setView("map");
+                  setMenuOpen(false);
+                }}
+              >
+                📍 Lokalizacja kierowcy
+              </button>
+              <button
+                className="menu-item"
+                onClick={() => {
                   setShowModal(true);
                   setMenuOpen(false);
                 }}
