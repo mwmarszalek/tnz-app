@@ -99,14 +99,16 @@ exports.checkAndSendNotifications = scheduler.onSchedule(
     memory: "256MiB",
   },
   async () => {
+    const now = new Date();
     const formatter = new Intl.DateTimeFormat("pl-PL", {
       timeZone: "Europe/Warsaw",
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
+      weekday: "long",
     });
 
-    const parts = formatter.formatToParts(new Date());
+    const parts = formatter.formatToParts(now);
     const currentHour = parseInt(parts.find((p) => p.type === "hour").value);
     const currentMinute = parseInt(
       parts.find((p) => p.type === "minute").value
@@ -114,6 +116,13 @@ exports.checkAndSendNotifications = scheduler.onSchedule(
     const currentTime = `${String(currentHour).padStart(2, "0")}:${String(
       currentMinute
     ).padStart(2, "0")}`;
+
+    const dayOfWeek = now.getDay();
+
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      console.log(`Weekend (${dayOfWeek === 0 ? 'niedziela' : 'sobota'}) - pomijam powiadomienia`);
+      return null;
+    }
 
     console.log(`Sprawdzam o ${currentTime}...`);
 
