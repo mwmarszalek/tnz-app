@@ -93,7 +93,7 @@ const sendNotification = async (departureTime) => {
 
 exports.checkAndSendNotifications = scheduler.onSchedule(
   {
-    schedule: "* 6-16 * * *",
+    schedule: "* 6-16 * * 1-5",
     timeZone: "Europe/Warsaw",
     timeoutSeconds: 60,
     memory: "256MiB",
