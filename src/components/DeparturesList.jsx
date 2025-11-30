@@ -5,6 +5,7 @@ import {
 } from "../utils/helpers";
 
 import { useState, useEffect, useRef } from "react";
+import { database, ref, onValue } from "../firebase";
 
 import DailyReportModal from "./DailyReportModal";
 
@@ -30,6 +31,7 @@ function DeparturesList({
   const [showDirectionModal, setShowDirectionModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [driverOnline, setDriverOnline] = useState(false);
 
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -40,6 +42,17 @@ function DeparturesList({
     }, 60000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Listen to driver GPS status
+  useEffect(() => {
+    const gpsStateRef = ref(database, "driverGPSEnabled");
+    const unsubscribe = onValue(gpsStateRef, (snapshot) => {
+      const isEnabled = snapshot.val();
+      setDriverOnline(isEnabled === true);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -290,6 +303,7 @@ function DeparturesList({
             onClick={() => handleBusChange("904")}
           >
             🚌 904
+            <span className={`bus-gps-dot ${driverOnline ? "online" : "offline"}`}></span>
           </button>
           <button
             className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
