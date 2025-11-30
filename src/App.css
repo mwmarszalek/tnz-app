@@ -74,7 +74,7 @@ body {
 }
 
 .back-btn ~ h1 {
-  margin-top: 40px;
+  margin-top: 50px;
 }
 
 .header p {
@@ -729,7 +729,12 @@ body {
 .info-card.status-online {
   background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
   border-color: #22c55e;
-  font-weight: 600;
+}
+
+.info-card.status-online .info-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #166534;
 }
 
 .info-icon {
@@ -843,31 +848,50 @@ body {
 
 /* Mobile responsive styles for location cards */
 @media (max-width: 600px) {
+  .header {
+    padding: 20px 15px;
+  }
+
   .location-info-cards {
-    flex-direction: column;
+    margin-top: 15px;
+    gap: 8px;
   }
 
   .info-card {
-    min-width: 100%;
+    padding: 10px 12px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .info-card.status-online .info-label {
+    font-size: 13px;
   }
 
   .info-icon {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .info-label {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .info-value {
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .location-info-offline {
+    margin-top: 15px;
   }
 
   .offline-card {
-    padding: 14px 16px;
+    padding: 12px 14px;
   }
 
   .offline-text {
-    font-size: 14px;
+    font-size: 13px;
+  }
+
+  .back-btn ~ h1 {
+    margin-top: 45px;
   }
 }
