@@ -53,7 +53,7 @@ function DriverMap({ setView }) {
     return `${Math.floor(diff / 3600)} godzin temu`;
   };
 
-  const defaultCenter = [52.2297, 21.0122]; // Warsaw
+  const defaultCenter = [53.36751415051011, 14.596111030196802]; // Szczecin ul. Szlamowa
   const mapCenter = driverLocation
     ? [driverLocation.latitude, driverLocation.longitude]
     : defaultCenter;
@@ -68,25 +68,33 @@ function DriverMap({ setView }) {
         <p>Transport Na Żądanie - Linia 904</p>
 
         {driverLocation && (
-          <div className="location-info">
-            <div className="location-status">
+          <div className="location-info-cards">
+            <div className="info-card status-online">
               <span className="status-dot active"></span>
-              <span>Kierowca online</span>
+              <span className="info-label">Kierowca online</span>
             </div>
-            <div className="location-time">
-              Ostatnia aktualizacja: {getTimeAgo()}
+            <div className="info-card">
+              <span className="info-icon">⏱️</span>
+              <div className="info-content">
+                <span className="info-label">Ostatnia aktualizacja</span>
+                <span className="info-value">{getTimeAgo()}</span>
+              </div>
             </div>
-            <div className="location-accuracy">
-              Dokładność: ±{Math.round(driverLocation.accuracy)}m
+            <div className="info-card">
+              <span className="info-icon">🎯</span>
+              <div className="info-content">
+                <span className="info-label">Dokładność</span>
+                <span className="info-value">±{Math.round(driverLocation.accuracy)}m</span>
+              </div>
             </div>
           </div>
         )}
 
         {!driverLocation && (
-          <div className="location-info">
-            <div className="location-status offline">
-              <span className="status-dot"></span>
-              <span>Brak danych o lokalizacji</span>
+          <div className="location-info-offline">
+            <div className="offline-card">
+              <span className="status-dot offline-blink"></span>
+              <span className="offline-text">Kierowca jest offline</span>
             </div>
           </div>
         )}

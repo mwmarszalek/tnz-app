@@ -699,16 +699,60 @@ body {
   gap: 8px;
 }
 
-.location-status {
+/* Location Info Cards - Online */
+.location-info-cards {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.info-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 15px;
+  gap: 12px;
+  flex: 1;
+  min-width: 150px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-card.status-online {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-color: #22c55e;
   font-weight: 600;
 }
 
-.location-status.offline {
-  opacity: 0.7;
+.info-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 15px;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .status-dot {
@@ -734,14 +778,43 @@ body {
   }
 }
 
-.location-time {
-  font-size: 13px;
-  opacity: 0.9;
+/* Location Info - Offline */
+.location-info-offline {
+  margin-top: 20px;
 }
 
-.location-accuracy {
-  font-size: 13px;
-  opacity: 0.9;
+.offline-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+.offline-text {
+  font-size: 15px;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.status-dot.offline-blink {
+  background: #ef4444;
+  animation: blink-offline 1.5s infinite;
+}
+
+@keyframes blink-offline {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
 }
 
 .back-btn {
@@ -766,4 +839,35 @@ body {
 
 .back-btn:active {
   transform: translateY(0);
+}
+
+/* Mobile responsive styles for location cards */
+@media (max-width: 600px) {
+  .location-info-cards {
+    flex-direction: column;
+  }
+
+  .info-card {
+    min-width: 100%;
+  }
+
+  .info-icon {
+    font-size: 20px;
+  }
+
+  .info-label {
+    font-size: 11px;
+  }
+
+  .info-value {
+    font-size: 14px;
+  }
+
+  .offline-card {
+    padding: 14px 16px;
+  }
+
+  .offline-text {
+    font-size: 14px;
+  }
 }
