@@ -5,6 +5,7 @@ import {
 } from "../utils/helpers";
 
 import { useState, useEffect, useRef } from "react";
+import { database, ref, onValue } from "../firebase";
 
 import DailyReportModal from "./DailyReportModal";
 
@@ -30,6 +31,7 @@ function DeparturesList({
   const [showDirectionModal, setShowDirectionModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [driverOnline, setDriverOnline] = useState(false);
 
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -40,6 +42,17 @@ function DeparturesList({
     }, 60000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Listen to driver GPS status
+  useEffect(() => {
+    const gpsStateRef = ref(database, "driverGPSEnabled");
+    const unsubscribe = onValue(gpsStateRef, (snapshot) => {
+      const isEnabled = snapshot.val();
+      setDriverOnline(isEnabled === true);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -214,8 +227,9 @@ function DeparturesList({
       departure.setHours(hours, minutes, 0, 0);
 
       const timeDiff = departure.getTime() - now.getTime();
+      const minutesDiff = timeDiff / 1000 / 60;
 
-      if (timeDiff > 0 && timeDiff < minDiff) {
+      if (timeDiff > 0 && minutesDiff <= 30 && timeDiff < minDiff) {
         minDiff = timeDiff;
         nextDeparture = time;
       }
@@ -289,6 +303,7 @@ function DeparturesList({
             onClick={() => handleBusChange("904")}
           >
             🚌 904
+            <span className={`bus-gps-dot ${driverOnline ? "online" : "offline"}`}></span>
           </button>
           <button
             className={`schedule-toggle ${busNumber === "908" ? "active" : ""}`}
@@ -357,6 +372,15 @@ function DeparturesList({
               <button
                 className="menu-item"
                 onClick={() => {
+                  setView("map");
+                  setMenuOpen(false);
+                }}
+              >
+                📍 Lokalizacja kierowcy
+              </button>
+              <button
+                className="menu-item"
+                onClick={() => {
                   setShowModal(true);
                   setMenuOpen(false);
                 }}
@@ -392,7 +416,12 @@ function DeparturesList({
           const isNextDeparture = getNextDeparture() === time;
 
           return (
-            <div key={time} className={`departure-item ${isNextDeparture ? "next-departure" : ""} ${smsSent ? "sms-sent" : ""}`}>
+            <div
+              key={time}
+              className={`departure-item ${
+                isNextDeparture ? "next-departure" : ""
+              } ${smsSent ? "sms-sent" : ""}`}
+            >
               {isNextDeparture && (
                 <div className="next-departure-badge">
                   <span className="pulse-dot"></span>

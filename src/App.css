@@ -70,6 +70,11 @@ body {
 .header h1 {
   font-size: 24px;
   margin-bottom: 5px;
+  margin-top: 0;
+}
+
+.back-btn ~ h1 {
+  margin-top: 50px;
 }
 
 .header p {
@@ -104,7 +109,7 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 28px 10px 20px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
@@ -113,6 +118,7 @@ body {
   align-items: center;
   gap: 8px;
   transition: all 0.2s;
+  position: relative;
 }
 
 .schedule-toggle:hover {
@@ -195,7 +201,8 @@ body {
 }
 
 @keyframes pulse-fast {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
   }
@@ -246,7 +253,8 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
   }
@@ -673,4 +681,255 @@ body {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+}
+
+.map-container {
+  flex: 1;
+  width: 100%;
+  height: calc(100dvh - 200px);
+  position: relative;
+}
+
+.location-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Location Info Cards - Online */
+.location-info-cards {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.info-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 150px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-card.status-online {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-color: #22c55e;
+}
+
+.info-card.status-online .info-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #166534;
+}
+
+.info-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 15px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  background: #ef4444;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.active {
+  background: #22c55e;
+  animation: pulse-online 2s infinite;
+}
+
+@keyframes pulse-online {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+}
+
+/* Location Info - Offline */
+.location-info-offline {
+  margin-top: 20px;
+}
+
+.offline-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+.offline-text {
+  font-size: 15px;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.status-dot.offline-blink {
+  background: #ef4444;
+  animation: blink-offline 1.5s infinite;
+}
+
+@keyframes blink-offline {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.back-btn:active {
+  transform: translateY(0);
+}
+
+/* GPS Indicator dot inside bus button */
+.bus-gps-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.bus-gps-dot.online {
+  background: #22c55e;
+  animation: pulse-online 2s infinite;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+}
+
+.bus-gps-dot.offline {
+  background: #ef4444;
+  animation: blink-offline 1.5s infinite;
+}
+
+/* Mobile responsive styles for location cards */
+@media (max-width: 600px) {
+  .header {
+    padding: 20px 15px;
+  }
+
+  .location-info-cards {
+    margin-top: 15px;
+    gap: 8px;
+  }
+
+  .info-card {
+    padding: 10px 12px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .info-card.status-online .info-label {
+    font-size: 13px;
+  }
+
+  .info-icon {
+    font-size: 16px;
+  }
+
+  .info-label {
+    font-size: 9px;
+  }
+
+  .info-value {
+    font-size: 12px;
+  }
+
+  .location-info-offline {
+    margin-top: 15px;
+  }
+
+  .offline-card {
+    padding: 12px 14px;
+  }
+
+  .offline-text {
+    font-size: 13px;
+  }
+
+  .back-btn ~ h1 {
+    margin-top: 50px;
+  }
+
+  .back-btn {
+    top: 15px;
+    left: 15px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .bus-gps-dot {
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-width: 1.5px;
+  }
 }
