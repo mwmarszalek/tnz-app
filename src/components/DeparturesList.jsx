@@ -214,8 +214,9 @@ function DeparturesList({
       departure.setHours(hours, minutes, 0, 0);
 
       const timeDiff = departure.getTime() - now.getTime();
+      const minutesDiff = timeDiff / 1000 / 60;
 
-      if (timeDiff > 0 && timeDiff < minDiff) {
+      if (timeDiff > 0 && minutesDiff <= 30 && timeDiff < minDiff) {
         minDiff = timeDiff;
         nextDeparture = time;
       }
@@ -401,7 +402,12 @@ function DeparturesList({
           const isNextDeparture = getNextDeparture() === time;
 
           return (
-            <div key={time} className={`departure-item ${isNextDeparture ? "next-departure" : ""} ${smsSent ? "sms-sent" : ""}`}>
+            <div
+              key={time}
+              className={`departure-item ${
+                isNextDeparture ? "next-departure" : ""
+              } ${smsSent ? "sms-sent" : ""}`}
+            >
               {isNextDeparture && (
                 <div className="next-departure-badge">
                   <span className="pulse-dot"></span>
