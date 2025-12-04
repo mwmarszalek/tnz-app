@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Aplikacja będzie dostępna pod adresem: `http://localhost:5173`
+Aplikacja będzie dostępna pod adresem: `https://tnz-app.netlify.app`
 
 ## 🏗️ Build
 
