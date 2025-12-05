@@ -1,3 +1,7 @@
+/* ========================================
+   THEME VARIABLES & COLOR SCHEME
+   ======================================== */
+
 :root {
   --primary-color: #667eea;
   --primary-dark: #764ba2;
@@ -16,13 +20,9 @@
   --primary-light: #ecfdf5;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
+/* ========================================
+   GLOBAL RESET & BASE STYLES
+   ======================================== */
 
 * {
   margin: 0;
@@ -41,6 +41,18 @@ body {
   padding: 0;
 }
 
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ========================================
+   MAIN CONTAINER
+   ======================================== */
+
 .container {
   max-width: 600px;
   min-width: 360px;
@@ -54,6 +66,16 @@ body {
   flex-direction: column;
   transition: all 0.3s ease;
 }
+
+.content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ========================================
+   HEADER & NAVIGATION
+   ======================================== */
 
 .header {
   background: linear-gradient(
@@ -80,6 +102,33 @@ body {
 .header p {
   opacity: 0.9;
   font-size: 14px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.back-btn:active {
+  transform: translateY(0);
 }
 
 .settings-btn {
@@ -138,29 +187,90 @@ body {
   pointer-events: none;
 }
 
-.back-btn {
+/* ========================================
+   MENU & DROPDOWN
+   ======================================== */
+
+.menu-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 15px;
+  font-size: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+  padding: 0;
 }
 
-.back-btn:hover {
+.menu-btn:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.content {
-  padding: 20px;
-  flex: 1;
-  overflow-y: auto;
+.dropdown-menu {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 100;
+  min-width: 200px;
 }
+
+.menu-item {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  background: white;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.menu-item:hover {
+  background: #f0f4ff;
+}
+
+.menu-item:not(:last-child) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.copy-menu-item {
+  color: #0369a1;
+}
+
+.copy-menu-item:hover {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1;
+}
+
+.clear-menu-item {
+  color: #dc2626;
+}
+
+.clear-menu-item:hover {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+}
+
+/* ========================================
+   DEPARTURE LIST ITEMS
+   ======================================== */
 
 .departure-item {
   width: 100%;
@@ -175,97 +285,6 @@ body {
 .departure-item:hover {
   border-color: var(--primary-color);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-}
-
-.departure-item.next-departure {
-  border-color: #ff6b35;
-  border-width: 3px;
-  background: linear-gradient(to right, #fff5f3 0%, white 100%);
-  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.25);
-  transition: all 0.3s ease;
-}
-
-.departure-item.next-departure:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
-  border-color: #ff5722;
-  background: linear-gradient(to right, #fff0ed 0%, #fffaf8 100%);
-}
-
-.departure-item.next-departure:hover .next-departure-badge {
-  background: linear-gradient(135deg, #ff5722 0%, #ff6b35 100%);
-}
-
-.departure-item.next-departure:hover .pulse-dot {
-  animation: pulse-fast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse-fast {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
-  }
-  50% {
-    transform: scale(1.3);
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-  }
-}
-
-.departure-item.sms-sent {
-  background: linear-gradient(to right, #dcfce7 0%, #f0fdf4 100%);
-  border-color: #22c55e;
-  border-width: 2px;
-}
-
-.departure-item.sms-sent .time-icon {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: white;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.departure-item.sms-sent:hover {
-  border-color: #16a34a;
-  box-shadow: 0 5px 20px rgba(34, 197, 94, 0.3);
-}
-
-.next-departure-badge {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-.pulse-dot {
-  width: 10px;
-  height: 10px;
-  background: white;
-  border-radius: 50%;
-  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
-  }
-  50% {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
-  }
-}
-
-.next-departure-text {
-  flex: 1;
 }
 
 .departure-main {
@@ -309,6 +328,103 @@ body {
   color: #666;
 }
 
+/* Next Departure Highlight */
+.departure-item.next-departure {
+  border-color: #ff6b35;
+  border-width: 3px;
+  background: linear-gradient(to right, #fff5f3 0%, white 100%);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.25);
+  transition: all 0.3s ease;
+}
+
+.departure-item.next-departure:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+  border-color: #ff5722;
+  background: linear-gradient(to right, #fff0ed 0%, #fffaf8 100%);
+}
+
+.departure-item.next-departure:hover .next-departure-badge {
+  background: linear-gradient(135deg, #ff5722 0%, #ff6b35 100%);
+}
+
+.departure-item.next-departure:hover .pulse-dot {
+  animation: pulse-fast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.next-departure-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
+}
+
+.next-departure-text {
+  flex: 1;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes pulse-fast {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
+  }
+  50% {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+}
+
+/* SMS Sent State */
+.departure-item.sms-sent {
+  background: linear-gradient(to right, #dcfce7 0%, #f0fdf4 100%);
+  border-color: #22c55e;
+  border-width: 2px;
+}
+
+.departure-item.sms-sent .time-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.departure-item.sms-sent:hover {
+  border-color: #16a34a;
+  box-shadow: 0 5px 20px rgba(34, 197, 94, 0.3);
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+
 .badge {
   background: #4ade80;
   color: white;
@@ -321,6 +437,32 @@ body {
 .badge-sms {
   background: #8b5cf6;
 }
+
+/* GPS Indicator Dot */
+.bus-gps-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.bus-gps-dot.online {
+  background: #22c55e;
+  animation: pulse-online 2s infinite;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+}
+
+.bus-gps-dot.offline {
+  background: #ef4444;
+  animation: blink-offline 1.5s infinite;
+}
+
+/* ========================================
+   DEPARTURE BUTTONS
+   ======================================== */
 
 .departure-buttons {
   display: flex;
@@ -342,13 +484,6 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
-}
-
-@media (max-width: 400px) {
-  .departure-btn-small {
-    font-size: 12px;
-    padding: 8px 6px;
-  }
 }
 
 .copy-small {
@@ -384,6 +519,10 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
 }
+
+/* ========================================
+   STOP SELECTION BUTTONS
+   ======================================== */
 
 .stop-btn {
   width: 100%;
@@ -449,6 +588,10 @@ body {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
+/* ========================================
+   ACTION BUTTONS
+   ======================================== */
 
 .action-buttons {
   position: sticky;
@@ -523,6 +666,10 @@ body {
   box-shadow: 0 15px 30px rgba(249, 115, 22, 0.4);
 }
 
+/* ========================================
+   SETTINGS FORM
+   ======================================== */
+
 .settings-form {
   padding: 20px;
 }
@@ -573,82 +720,9 @@ body {
   font-size: 18px;
 }
 
-.menu-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  z-index: 10;
-  padding: 0;
-}
-
-.menu-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 70px;
-  right: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  z-index: 100;
-  min-width: 200px;
-}
-
-.menu-item {
-  width: 100%;
-  padding: 15px 20px;
-  border: none;
-  background: white;
-  text-align: left;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #333;
-}
-
-.menu-item:hover {
-  background: #f0f4ff;
-}
-
-.menu-item:not(:last-child) {
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.copy-menu-item {
-  color: #0369a1;
-}
-
-.clear-menu-item {
-  color: #dc2626;
-}
-
-.copy-menu-item:hover {
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-  color: #0369a1;
-}
-
-.clear-menu-item:hover {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  color: #dc2626;
-}
+/* ========================================
+   MODAL
+   ======================================== */
 
 .modal-overlay {
   position: fixed;
@@ -683,6 +757,10 @@ body {
   margin-top: 20px;
 }
 
+/* ========================================
+   MAP & LOCATION TRACKING
+   ======================================== */
+
 .map-container {
   flex: 1;
   width: 100%;
@@ -700,7 +778,7 @@ body {
   gap: 8px;
 }
 
-/* Location Info Cards - Online */
+/* Location Info Cards - Online State */
 .location-info-cards {
   display: flex;
   gap: 12px;
@@ -784,7 +862,7 @@ body {
   }
 }
 
-/* Location Info - Offline */
+/* Location Info - Offline State */
 .location-info-offline {
   margin-top: 20px;
 }
@@ -823,56 +901,24 @@ body {
   }
 }
 
-.back-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.2s;
-}
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
 
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-.back-btn:active {
-  transform: translateY(0);
-}
-
-/* GPS Indicator dot inside bus button */
-.bus-gps-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 2px solid white;
-}
-
-.bus-gps-dot.online {
-  background: #22c55e;
-  animation: pulse-online 2s infinite;
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
-}
-
-.bus-gps-dot.offline {
-  background: #ef4444;
-  animation: blink-offline 1.5s infinite;
-}
-
-/* Mobile responsive styles for location cards */
 @media (max-width: 600px) {
   .header {
     padding: 20px 15px;
+  }
+
+  .back-btn ~ h1 {
+    margin-top: 50px;
+  }
+
+  .back-btn {
+    top: 15px;
+    left: 15px;
+    padding: 8px 16px;
+    font-size: 14px;
   }
 
   .location-info-cards {
@@ -914,22 +960,18 @@ body {
     font-size: 13px;
   }
 
-  .back-btn ~ h1 {
-    margin-top: 50px;
-  }
-
-  .back-btn {
-    top: 15px;
-    left: 15px;
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-
   .bus-gps-dot {
     top: 6px;
     right: 6px;
     width: 8px;
     height: 8px;
     border-width: 1.5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .departure-btn-small {
+    font-size: 12px;
+    padding: 8px 6px;
   }
 }
